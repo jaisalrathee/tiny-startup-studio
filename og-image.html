@@ -1,0 +1,254 @@
+<!doctype html>
+<html>
+<head>
+<meta charset="utf-8" />
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=Instrument+Serif:ital@0;1&display=swap');
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  html, body {
+    width: 1200px;
+    height: 630px;
+    overflow: hidden;
+  }
+
+  body {
+    background: #0D0C09;
+    font-family: 'Inter Tight', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .canvas {
+    width: 1200px;
+    height: 630px;
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 56px 72px 52px;
+  }
+
+  /* ── SUBTLE GRID ── */
+  .grid {
+    position: absolute;
+    inset: 0;
+    background-image:
+      linear-gradient(#F4F1EA07 1px, transparent 1px),
+      linear-gradient(90deg, #F4F1EA07 1px, transparent 1px);
+    background-size: 80px 80px;
+    pointer-events: none;
+  }
+
+  /* ── OUTER VIGNETTE ── */
+  .vignette {
+    position: absolute;
+    inset: 0;
+    background: radial-gradient(ellipse 110% 110% at 50% 50%, transparent 40%, #0D0C09 100%);
+    pointer-events: none;
+    z-index: 1;
+  }
+
+  /* ── MAIN GLOW — centered in the upper half ── */
+  .glow-main {
+    position: absolute;
+    width: 820px;
+    height: 480px;
+    left: 50%;
+    top: 42%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(
+      ellipse,
+      oklch(0.74 0.15 62 / 0.28) 0%,
+      oklch(0.70 0.14 58 / 0.14) 35%,
+      oklch(0.66 0.12 52 / 0.05) 62%,
+      transparent 72%
+    );
+    filter: blur(0px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── SECONDARY GLOW (hot spot) ── */
+  .glow-hot {
+    position: absolute;
+    width: 340px;
+    height: 260px;
+    left: 50%;
+    top: 44%;
+    transform: translate(-50%, -50%);
+    border-radius: 50%;
+    background: radial-gradient(
+      ellipse,
+      oklch(0.80 0.18 66 / 0.30) 0%,
+      transparent 70%
+    );
+    filter: blur(30px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  /* ── TOP BAR ── */
+  .top-bar {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 11px;
+  }
+  .brand-dot {
+    width: 14px;
+    height: 14px;
+    background: #C4904F;
+    border-radius: 3px;
+    flex-shrink: 0;
+    box-shadow: 0 0 14px 4px oklch(0.72 0.16 60 / 0.50);
+  }
+  .brand-name {
+    font-size: 17px;
+    font-weight: 600;
+    letter-spacing: -0.01em;
+    color: #EDE8DF;
+  }
+
+  .badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.09em;
+    text-transform: uppercase;
+    color: #7A7268;
+    padding: 6px 14px 6px 10px;
+    border: 1px solid #F4F1EA1A;
+    border-radius: 100px;
+    background: #F4F1EA05;
+  }
+  .badge-dot {
+    width: 6px;
+    height: 6px;
+    background: #4ADE80;
+    border-radius: 50%;
+    box-shadow: 0 0 6px 2px #4ADE8066;
+  }
+
+  /* ── HEADLINE BLOCK — full-bleed center ── */
+  .headline-wrap {
+    position: absolute;
+    z-index: 2;
+    inset: 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .headline {
+    font-size: 96px;
+    line-height: 0.91;
+    letter-spacing: -0.045em;
+    font-weight: 500;
+    color: #EDE8DF;
+    max-width: 1040px;
+  }
+
+  .headline em {
+    font-family: 'Instrument Serif', serif;
+    font-style: italic;
+    font-weight: 400;
+    letter-spacing: -0.025em;
+    color: #C4904F;
+  }
+
+  /* ── BOTTOM BAR ── */
+  .bottom-bar {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    align-items: flex-end;
+    justify-content: space-between;
+    border-top: 1px solid #F4F1EA10;
+    padding-top: 20px;
+    margin-top: auto;
+  }
+
+  .bottom-left {
+    font-size: 13px;
+    color: #52493F;
+    letter-spacing: 0.02em;
+  }
+  .bottom-left strong {
+    color: #6B6258;
+    font-weight: 500;
+  }
+
+  .url {
+    font-size: 13px;
+    font-weight: 500;
+    letter-spacing: 0.04em;
+    color: #52493F;
+  }
+
+  /* ── CORNER MARKS ── */
+  .corner {
+    position: absolute;
+    width: 20px;
+    height: 20px;
+    z-index: 3;
+    opacity: 0.3;
+  }
+  .corner-tl { top: 20px; left: 20px; border-top: 1px solid #C4904F; border-left: 1px solid #C4904F; }
+  .corner-tr { top: 20px; right: 20px; border-top: 1px solid #C4904F; border-right: 1px solid #C4904F; }
+  .corner-bl { bottom: 20px; left: 20px; border-bottom: 1px solid #C4904F; border-left: 1px solid #C4904F; }
+  .corner-br { bottom: 20px; right: 20px; border-bottom: 1px solid #C4904F; border-right: 1px solid #C4904F; }
+</style>
+</head>
+<body>
+<div class="canvas">
+  <div class="grid"></div>
+  <div class="glow-main"></div>
+  <div class="glow-hot"></div>
+  <div class="vignette"></div>
+
+  <div class="corner corner-tl"></div>
+  <div class="corner corner-tr"></div>
+  <div class="corner corner-bl"></div>
+  <div class="corner corner-br"></div>
+
+  <!-- TOP -->
+  <div class="top-bar">
+    <div class="brand">
+      <div class="brand-dot"></div>
+      <div class="brand-name">Tiny Startup Studio</div>
+    </div>
+    <div class="badge">
+      <span class="badge-dot"></span>
+      Available now · June 2026
+    </div>
+  </div>
+
+  <!-- HEADLINE — absolutely centred -->
+  <div class="headline-wrap">
+    <h1 class="headline">We'll build your<br>MVP in <em>48 hours.</em></h1>
+  </div>
+
+  <!-- SPACER so flex pushes bottom bar down -->
+  <div style="flex:1"></div>
+
+  <!-- BOTTOM -->
+  <div class="bottom-bar">
+    <div class="bottom-left">Fixed fee &middot; Async &middot; <strong>London, UK</strong></div>
+    <div class="url">tinystartupstudio.com</div>
+  </div>
+</div>
+</body>
+</html>
