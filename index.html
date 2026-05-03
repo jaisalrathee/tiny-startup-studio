@@ -1230,10 +1230,9 @@
   });
 
   // ── BOOKING CALENDAR ─────────────────────────────────────────────────────
-  // FIX: full dynamic calendar with working nav + href update on every change
   (function () {
-    const MONTHS = ['January','February','March','April','May','June',
-                    'July','August','September','October','November','December'];
+    const MONTHS    = ['January','February','March','April','May','June',
+                       'July','August','September','October','November','December'];
     const DAY_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
     const dayLabel  = document.getElementById('cal-time-label');
@@ -1243,43 +1242,86 @@
     const prevBtn   = document.querySelector('.cal-nav button:first-child');
     const nextBtn   = document.querySelector('.cal-nav button:last-child');
 
-    const MIN_YEAR = 2026, MIN_MONTH = 4; // May 2026 — don't go earlier
-    let calYear  = 2026;
-    let calMonth = 4;         // 0-indexed
-    let selDay   = 13;        // selected day number
+    // ── min bookable date = tomorrow ─────────────────────────────────────────
+    const TODAY    = new Date(); TODAY.setHours(0,0,0,0);
+    const TOMORROW = new Date(TODAY); TOMORROW.setDate(TODAY.getDate() + 1);
+    const MIN_YEAR  = TOMORROW.getFullYear();
+    const MIN_MONTH = TOMORROW.getMonth();
+
+    let calYear  = MIN_YEAR;
+    let calMonth = MIN_MONTH;
+    let selDay   = null;
     let selTime  = '11:30 AM';
+
+    // ── UK timezone offset (BST = +1, GMT = 0) ───────────────────────────────
+    function ukOffset(year, month, day) {
+      function lastSun(y, m) {
+        const d = new Date(Date.UTC(y, m + 1, 0));
+        d.setUTCDate(d.getUTCDate() - d.getUTCDay());
+        d.setUTCHours(1); return d;
+      }
+      const d = new Date(Date.UTC(year, month, day));
+      return (d >= lastSun(year, 2) && d < lastSun(year, 9)) ? 1 : 0;
+    }
+    function tzStr(year, month, day) {
+      return ukOffset(year, month, day) === 1 ? 'BST' : 'GMT';
+    }
+
+    // ── Build Google Calendar event URL ──────────────────────────────────────
+    function gcalUrl(year, month, day, timeStr) {
+      const m = timeStr.match(/(\d+):(\d+)\s*(AM|PM)/i);
+      let h = parseInt(m[1]), mins = parseInt(m[2]);
+      if (m[3].toUpperCase() === 'PM' && h !== 12) h += 12;
+      if (m[3].toUpperCase() === 'AM' && h === 12) h = 0;
+      const utcH   = h - ukOffset(year, month, day);
+      const endMin = mins + 30;
+      const endH   = utcH + Math.floor(endMin / 60);
+      const pad    = n => String(n).padStart(2,'0');
+      const start  = `${year}${pad(month+1)}${pad(day)}T${pad(utcH)}${pad(mins)}00Z`;
+      const end    = `${year}${pad(month+1)}${pad(day)}T${pad(endH)}${pad(endMin%60)}00Z`;
+      const title  = encodeURIComponent('Discovery call — Tiny Startup Studio');
+      const tz     = tzStr(year, month, day);
+      const dn     = DAY_SHORT[new Date(year, month, day).getDay()];
+      const desc   = encodeURIComponent(
+        `Booked via tinystartupstudio.com\n\nTime: ${timeStr} ${tz} · ${dn} ${MONTHS[month]} ${day}\n\nJaisal will confirm and share a Google Meet link shortly after.`
+      );
+      return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&add=jr%40tinystartups.com&details=${desc}`;
+    }
 
     function getDN(y, m, d) { return DAY_SHORT[new Date(y, m, d).getDay()]; }
 
-    // FIX 2: update both text AND href every time selection changes
     function updateLabels() {
       if (!selDay) return;
       const dn = getDN(calYear, calMonth, selDay);
       const mn = MONTHS[calMonth];
-      dayLabel.textContent = `${dn}, ${mn} ${selDay} · times in your zone`;
-      confirmBtn.firstChild.textContent = `Confirm ${selTime} · ${dn} ${mn} ${selDay} `;
-      const subj = encodeURIComponent(`Discovery call — ${selTime} ${dn} ${mn} ${selDay}`);
-      confirmBtn.setAttribute('href', `mailto:jr@tinystartups.com?subject=${subj}`);
+      const tz = tzStr(calYear, calMonth, selDay);
+      dayLabel.textContent = `${dn}, ${mn} ${selDay} · times in UK (${tz})`;
+      confirmBtn.firstChild.textContent = `Confirm ${selTime} ${tz} · ${dn} ${mn} ${selDay} `;
+      confirmBtn.setAttribute('href', gcalUrl(calYear, calMonth, selDay, selTime));
+      confirmBtn.setAttribute('target', '_blank');
+      confirmBtn.setAttribute('rel', 'noopener');
     }
 
-    // FIX 3: dynamically build calendar grid for any month
+    function isBookable(d) {
+      const date = new Date(calYear, calMonth, d);
+      const dow  = date.getDay();
+      return dow !== 0 && dow !== 6 && date >= TOMORROW;
+    }
+
     function buildCal() {
       calH4.textContent = `${MONTHS[calMonth]} ${calYear}`;
 
-      // Disable prev at earliest allowed month
       const atMin = calYear === MIN_YEAR && calMonth === MIN_MONTH;
       prevBtn.disabled = atMin;
       prevBtn.style.opacity = atMin ? '0.3' : '';
       prevBtn.style.pointerEvents = atMin ? 'none' : '';
 
-      // Keep day-of-week headers, remove old cells
       Array.from(calGrid.querySelectorAll('.cal-cell')).forEach(c => c.remove());
 
-      const firstDow     = (new Date(calYear, calMonth, 1).getDay() + 6) % 7; // Mon=0
-      const daysInMonth  = new Date(calYear, calMonth + 1, 0).getDate();
-      const daysInPrev   = new Date(calYear, calMonth, 0).getDate();
+      const firstDow    = (new Date(calYear, calMonth, 1).getDay() + 6) % 7;
+      const daysInMonth = new Date(calYear, calMonth + 1, 0).getDate();
+      const daysInPrev  = new Date(calYear, calMonth, 0).getDate();
 
-      // Leading overflow cells (prev month)
       for (let i = firstDow - 1; i >= 0; i--) {
         const c = document.createElement('div');
         c.className = 'cal-cell muted';
@@ -1287,28 +1329,23 @@
         calGrid.appendChild(c);
       }
 
-      // Current month
       for (let d = 1; d <= daysInMonth; d++) {
-        const dow = new Date(calYear, calMonth, d).getDay();
-        const wkday = dow !== 0 && dow !== 6;
-        const c = document.createElement('div');
-        c.className = wkday ? 'cal-cell dot' : 'cal-cell muted';
-        if (wkday && d === selDay) c.classList.add('selected');
+        const ok = isBookable(d);
+        const c  = document.createElement('div');
+        c.className = ok ? 'cal-cell dot' : 'cal-cell muted';
+        if (ok && d === selDay) c.classList.add('selected');
         c.textContent = d;
-        if (wkday) {
+        if (ok) {
           c.addEventListener('click', () => {
             calGrid.querySelectorAll('.cal-cell.selected').forEach(x => x.classList.remove('selected'));
             c.classList.add('selected');
-            selDay = d;
-            updateLabels();
+            selDay = d; updateLabels();
           });
         }
         calGrid.appendChild(c);
       }
 
-      // Trailing overflow cells (next month)
-      const total   = calGrid.querySelectorAll('.cal-cell').length;
-      const trail   = (7 - (total % 7)) % 7;
+      const trail = (7 - (calGrid.querySelectorAll('.cal-cell').length % 7)) % 7;
       for (let i = 1; i <= trail; i++) {
         const c = document.createElement('div');
         c.className = 'cal-cell muted';
@@ -1316,14 +1353,21 @@
         calGrid.appendChild(c);
       }
 
-      // If selected day doesn't exist in new month, clear it
-      if (selDay > daysInMonth) {
-        selDay = null;
+      // Auto-select first bookable day (or clear if none left)
+      if (selDay && !isBookable(selDay)) selDay = null;
+      if (!selDay) {
+        for (let d = 1; d <= daysInMonth; d++) { if (isBookable(d)) { selDay = d; break; } }
+      }
+      if (selDay) {
+        calGrid.querySelectorAll('.cal-cell.selected').forEach(x => x.classList.remove('selected'));
+        const cells = calGrid.querySelectorAll('.cal-cell.dot');
+        cells.forEach(c => { if (parseInt(c.textContent) === selDay) c.classList.add('selected'); });
+        updateLabels();
+      } else {
         dayLabel.textContent = `${MONTHS[calMonth]} · pick a day`;
         confirmBtn.firstChild.textContent = `Pick a day to confirm `;
-        confirmBtn.setAttribute('href', 'mailto:jr@tinystartups.com');
-      } else {
-        updateLabels();
+        confirmBtn.setAttribute('href', '#book');
+        confirmBtn.removeAttribute('target');
       }
     }
 
@@ -1345,7 +1389,7 @@
       });
     });
 
-    buildCal(); // initialise
+    buildCal();
   })();
 
   // ── CURSOR GLOW ORB (lerp-following + section hue shift) ─────────────────
