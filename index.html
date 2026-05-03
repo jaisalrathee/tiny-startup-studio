@@ -549,15 +549,33 @@
     html { scroll-behavior: auto; }
   }
 
-  /* ---------- CURSOR GLOW ---------- */
+  /* ---------- CURSOR GLOW ORB ---------- */
   #cursor-glow {
     position: fixed;
-    inset: 0;
+    width: 560px;
+    height: 560px;
+    border-radius: 50%;
     pointer-events: none;
     z-index: 0;
     opacity: 0;
-    transition: opacity 1s ease;
-    background: radial-gradient(700px circle at var(--cx,-9999px) var(--cy,-9999px), oklch(0.68 0.13 55 / 0.06), transparent 50%);
+    transition: opacity 1.2s ease;
+    will-change: transform;
+    /* center on (0,0) by default — JS moves it */
+    left: 0; top: 0;
+    transform: translate(-50%, -50%);
+    /* layered glow: hot bright core → warm mid → wide diffuse halo */
+    background: radial-gradient(
+      circle,
+      oklch(0.82 0.18 68 / 0.22)  0%,
+      oklch(0.76 0.15 62 / 0.13) 28%,
+      oklch(0.70 0.13 55 / 0.06) 55%,
+      transparent 70%
+    );
+    box-shadow:
+      0 0  60px 20px oklch(0.80 0.17 66 / 0.12),
+      0 0 160px 60px oklch(0.74 0.14 60 / 0.07),
+      0 0 320px 120px oklch(0.68 0.12 54 / 0.04);
+    filter: blur(1px);
   }
   body.cursor-active #cursor-glow { opacity: 1; }
 
@@ -1169,19 +1187,37 @@
     });
   });
 
-  // ── CURSOR GLOW ───────────────────────────────────────────────────────────
-  const glowEl = document.getElementById('cursor-glow');
-  if (glowEl && window.matchMedia('(pointer:fine)').matches) {
-    let raf;
+  // ── CURSOR GLOW ORB (lerp-following) ─────────────────────────────────────
+  (function () {
+    const orb = document.getElementById('cursor-glow');
+    if (!orb || !window.matchMedia('(pointer:fine)').matches) return;
+
+    let tx = -9999, ty = -9999; // target (mouse)
+    let cx = -9999, cy = -9999; // current (lerped)
+    let active = false;
+
     document.addEventListener('mousemove', e => {
-      cancelAnimationFrame(raf);
-      raf = requestAnimationFrame(() => {
-        document.documentElement.style.setProperty('--cx', e.clientX + 'px');
-        document.documentElement.style.setProperty('--cy', e.clientY + 'px');
+      tx = e.clientX;
+      ty = e.clientY;
+      if (!active) {
+        active = true;
         document.body.classList.add('cursor-active');
-      });
+      }
     });
-  }
+
+    // Leave page → drift off-screen
+    document.addEventListener('mouseleave', () => { tx = cx - 200; ty = cy + 300; });
+
+    const LERP = 0.072; // lower = lazier / dreamier
+    function lerp(a, b, t) { return a + (b - a) * t; }
+
+    (function tick() {
+      cx = lerp(cx, tx, LERP);
+      cy = lerp(cy, ty, LERP);
+      orb.style.transform = `translate(calc(${cx}px - 50%), calc(${cy}px - 50%))`;
+      requestAnimationFrame(tick);
+    })();
+  })();
 
   // ── SCROLL REVEALS ────────────────────────────────────────────────────────
   const revealObserver = new IntersectionObserver((entries) => {
