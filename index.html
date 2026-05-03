@@ -1370,6 +1370,7 @@
   // ── SCROLL REVEALS ────────────────────────────────────────────────────────
   function instantReveal(el) {
     el.style.transition = 'none';
+    void el.offsetHeight; // force style recalc before class change
     el.classList.add('revealed');
     requestAnimationFrame(() => requestAnimationFrame(() => { el.style.transition = ''; }));
   }
