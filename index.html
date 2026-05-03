@@ -516,6 +516,15 @@
     .hero-actions { gap: 8px; }
 
     .work-card .meta .left .ttl { font-size: 16px; }
+
+    .process-grid { grid-template-columns: 1fr; }
+    .process-step { padding: 28px 0 24px 0; border-right: none; border-bottom: 1px solid var(--rule); }
+    .process-step:last-child { border-bottom: none; }
+    .process-step:nth-child(2) { border-right: none; }
+    .process-step:nth-last-child(-n+2) { border-bottom: 1px solid var(--rule); }
+    .process-step:last-child { border-bottom: none; }
+    .process-step h4 { font-size: 18px; }
+
     .price-card { padding: 24px; }
     .pricing { padding: 44px 20px; }
     .pricing-wrap { padding: 0 8px; }
