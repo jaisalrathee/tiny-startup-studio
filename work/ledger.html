@@ -1,0 +1,301 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#0F0E0A" />
+<title>Ledger — Tiny Startup Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="_shared.css" />
+<style>
+  body {
+    background: #0F0E0A;
+    color: #FBF9F3;
+    min-height: 100vh;
+  }
+  .wrap { max-width: 1280px; margin: 0 auto; padding: 80px 32px 64px; }
+  .nav-mock {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 18px 0; border-bottom: 1px solid rgba(255,255,255,0.08);
+    gap: 16px;
+  }
+  .nav-mock .brand { display: flex; align-items: center; gap: 10px; font-weight: 500; letter-spacing: -0.01em; }
+  .nav-mock .brand .mark { width: 22px; height: 22px; border-radius: 4px; background: oklch(0.68 0.13 55); position: relative; flex: none; }
+  .nav-mock .brand .mark::after { content: ''; position: absolute; inset: 4px; border: 1px solid #0F0E0A; border-radius: 1px; }
+  .nav-mock .links { display: flex; gap: 28px; font-size: 14px; color: rgba(255,255,255,0.7); }
+  .nav-mock .actions { display: flex; gap: 12px; align-items: center; font-size: 14px; }
+  .nav-mock .pill-btn { padding: 8px 14px; border-radius: 999px; background: oklch(0.68 0.13 55); color: #0F0E0A; font-weight: 500; }
+
+  .hero-row { display: grid; grid-template-columns: 1.2fr 1fr; gap: 64px; padding: 80px 0 48px; align-items: end; }
+  .hero-row .mono { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: rgba(255,255,255,0.5); }
+  .hero-row h1 {
+    font-size: clamp(40px, 7vw, 96px);
+    line-height: 0.95; letter-spacing: -0.04em;
+    font-weight: 500;
+    margin: 16px 0 0;
+    text-wrap: balance;
+  }
+  .hero-row h1 .it { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; }
+  .hero-row h1 .accent { color: oklch(0.68 0.13 55); }
+  .hero-row .desc { color: rgba(255,255,255,0.65); font-size: 17px; max-width: 44ch; line-height: 1.55; }
+  .hero-row .actions { display: flex; gap: 12px; margin-top: 28px; flex-wrap: wrap; }
+  .btn-d { display: inline-flex; gap: 8px; align-items: center; padding: 12px 20px; border-radius: 999px; background: #FBF9F3; color: #0F0E0A; font-size: 14px; font-weight: 500; text-decoration: none; transition: transform 0.15s ease; }
+  .btn-d:hover { transform: translateY(-1px); }
+  .btn-d.ghost { background: transparent; color: #FBF9F3; border: 1px solid rgba(255,255,255,0.2); }
+
+  .ticker {
+    margin-top: 48px;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
+    padding: 16px 0;
+    font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.6);
+    overflow: hidden; white-space: nowrap;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 5%, #000 95%, transparent);
+  }
+  .ticker .row { display: inline-flex; gap: 64px; animation: tick 50s linear infinite; }
+  .ticker .row span b { color: oklch(0.78 0.15 145); font-weight: 500; }
+  .ticker .row span .dn { color: oklch(0.7 0.15 25); }
+  @keyframes tick { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  .dash {
+    margin-top: 80px;
+    background: #1A1814;
+    border-radius: 20px;
+    border: 1px solid rgba(255,255,255,0.08);
+    overflow: hidden;
+    box-shadow: 0 60px 120px -40px rgba(0,0,0,0.6);
+  }
+  .dash-head {
+    padding: 16px 24px;
+    border-bottom: 1px solid rgba(255,255,255,0.06);
+    display: flex; align-items: center; justify-content: space-between; gap: 12px;
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.06em;
+  }
+  .dash-head .lights { display: flex; gap: 6px; flex: none; }
+  .dash-head .lights span { width: 10px; height: 10px; border-radius: 50%; background: rgba(255,255,255,0.15); }
+  .dash-head .url { overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+  .dash-body { display: grid; grid-template-columns: 220px 1fr; }
+  .side { padding: 24px 16px; border-right: 1px solid rgba(255,255,255,0.06); display: flex; flex-direction: column; gap: 4px; font-size: 14px; }
+  .side .grp { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.4); padding: 12px 12px 4px; text-transform: uppercase; letter-spacing: 0.06em; }
+  .side a { display: flex; justify-content: space-between; padding: 8px 12px; border-radius: 8px; color: rgba(255,255,255,0.7); text-decoration: none; cursor: pointer; }
+  .side a:hover { background: rgba(255,255,255,0.04); color: #FBF9F3; }
+  .side a.active { background: rgba(255,255,255,0.06); color: #FBF9F3; }
+  .side a .num { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: rgba(255,255,255,0.4); }
+
+  .main { padding: 28px 28px 32px; display: flex; flex-direction: column; gap: 20px; min-width: 0; }
+  .balance-row { display: grid; grid-template-columns: 1.4fr 1fr 1fr 1fr; gap: 16px; }
+  .stat-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 18px; }
+  .stat-card .lbl { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.06em; }
+  .stat-card .val { font-size: clamp(22px, 2.6vw, 32px); font-weight: 500; letter-spacing: -0.02em; margin-top: 8px; }
+  .stat-card .val small { font-size: 14px; color: rgba(255,255,255,0.5); font-weight: 400; }
+  .stat-card .delta { display: inline-flex; align-items: center; gap: 4px; font-size: 12px; color: oklch(0.78 0.15 145); margin-top: 6px; }
+  .stat-card.feature { background: linear-gradient(135deg, oklch(0.35 0.12 55), oklch(0.22 0.08 35)); border-color: oklch(0.45 0.13 55); }
+  .stat-card.feature .lbl { color: oklch(0.85 0.06 55); }
+
+  .chart-card { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; padding: 20px; }
+  .chart-head { display: flex; justify-content: space-between; align-items: center; margin-bottom: 16px; gap: 12px; flex-wrap: wrap; }
+  .chart-head h4 { margin: 0; font-size: 14px; font-weight: 500; }
+  .chart-tabs { display: flex; gap: 4px; flex-wrap: wrap; }
+  .chart-tabs button { background: transparent; color: rgba(255,255,255,0.6); border: 1px solid rgba(255,255,255,0.08); padding: 5px 10px; border-radius: 6px; font: inherit; font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; cursor: pointer; }
+  .chart-tabs button.active { background: rgba(255,255,255,0.08); color: #FBF9F3; border-color: rgba(255,255,255,0.2); }
+  .chart-card svg { width: 100%; height: 180px; display: block; }
+
+  .tx-table { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 12px; overflow: hidden; }
+  .tx-row { display: grid; grid-template-columns: 1fr 140px 100px 120px; gap: 16px; padding: 14px 18px; align-items: center; font-size: 14px; border-bottom: 1px solid rgba(255,255,255,0.04); }
+  .tx-row:last-child { border-bottom: none; }
+  .tx-row.head { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.5); text-transform: uppercase; letter-spacing: 0.06em; padding: 12px 18px; background: rgba(255,255,255,0.02); }
+  .tx-row .merchant { display: flex; align-items: center; gap: 12px; min-width: 0; }
+  .tx-row .merchant .ic { width: 28px; height: 28px; border-radius: 6px; background: rgba(255,255,255,0.08); display: grid; place-items: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #FBF9F3; flex: none; }
+  .tx-row .merchant > div:last-child { min-width: 0; overflow: hidden; }
+  .tx-row .merchant > div:last-child > div:first-child { white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .tx-row .amt { font-family: 'JetBrains Mono', monospace; text-align: right; }
+  .tx-row .amt.pos { color: oklch(0.78 0.15 145); }
+  .stat-pill { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 3px 8px; border-radius: 999px; background: rgba(255,255,255,0.06); color: rgba(255,255,255,0.7); text-transform: uppercase; letter-spacing: 0.04em; display: inline-flex; align-items: center; gap: 5px; }
+  .stat-pill.ok { background: oklch(0.3 0.1 145 / 0.4); color: oklch(0.85 0.13 145); }
+  .stat-pill.ok::before { content: ''; width: 5px; height: 5px; border-radius: 50%; background: oklch(0.78 0.15 145); }
+
+  @media (max-width: 1024px) {
+    .wrap { padding: 80px 24px 56px; }
+    .nav-mock .links { display: none; }
+    .hero-row { grid-template-columns: 1fr; gap: 32px; padding: 48px 0 32px; align-items: start; }
+    .balance-row { grid-template-columns: 1fr 1fr; }
+    .dash-body { grid-template-columns: 1fr; }
+    .side { display: none; }
+    .main { padding: 20px; }
+    .dash { margin-top: 56px; }
+  }
+
+  @media (max-width: 720px) {
+    .wrap { padding: 72px 20px 48px; }
+    .nav-mock .actions span { display: none; }
+    .nav-mock .actions .pill-btn { display: inline-flex; }
+    .balance-row { grid-template-columns: 1fr; }
+    .tx-row { grid-template-columns: 1fr 90px; gap: 12px; padding: 12px 14px; font-size: 13px; }
+    .tx-row.head, .tx-row .col-date, .tx-row .col-status { display: none; }
+    .chart-card svg { height: 140px; }
+    .dash-head .url { display: none; }
+  }
+
+  @media (max-width: 480px) {
+    .wrap { padding: 64px 16px 40px; }
+    .main { padding: 16px; }
+    .stat-card { padding: 16px; }
+    .nav-mock .brand { font-size: 14px; }
+  }
+</style>
+</head>
+<body>
+<a class="back-bar dark" href="../index.html"><span class="arr">←</span> All work</a>
+<div class="proj-meta dark"><span class="pulse-dot"></span> Live · Ledger.com</div>
+
+<div class="wrap">
+  <nav class="nav-mock">
+    <div class="brand"><span class="mark"></span> Ledger</div>
+    <div class="links">
+      <span>Treasury</span><span>Cards</span><span>Yield</span><span>Customers</span><span>Pricing</span>
+    </div>
+    <div class="actions">
+      <span style="color: rgba(255,255,255,0.6)">Sign in</span>
+      <span class="pill-btn">Open account</span>
+    </div>
+  </nav>
+
+  <div class="hero-row">
+    <div>
+      <div class="mono">Treasury · Built for founders</div>
+      <h1>Treasury for the <span class="it accent">post-bank</span> startup.</h1>
+    </div>
+    <div>
+      <p class="desc">Park your runway, earn 5.4% APY, send wires in seconds, and never wait on hold again. FDIC-insured up to $125M through partner banks.</p>
+      <div class="actions">
+        <a class="btn-d" href="#">Open an account →</a>
+        <a class="btn-d ghost" href="#">Talk to founder ops</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="ticker" aria-hidden="true">
+    <div class="row">
+      <span>SPX <b>5,847.21</b> +0.84%</span>
+      <span>SOFR <b>4.31</b></span>
+      <span>USD/EUR <b>0.928</b> <span class="dn">−0.04%</span></span>
+      <span>YIELD APY <b>5.42%</b></span>
+      <span>FED <b>4.50</b></span>
+      <span>BTC <b>$94,210</b> +1.2%</span>
+      <span>SPX <b>5,847.21</b> +0.84%</span>
+      <span>SOFR <b>4.31</b></span>
+      <span>USD/EUR <b>0.928</b> <span class="dn">−0.04%</span></span>
+      <span>YIELD APY <b>5.42%</b></span>
+      <span>FED <b>4.50</b></span>
+      <span>BTC <b>$94,210</b> +1.2%</span>
+    </div>
+  </div>
+
+  <div class="dash">
+    <div class="dash-head">
+      <div class="lights"><span></span><span></span><span></span></div>
+      <div class="url">app.ledger.com / treasury</div>
+      <div>USD · Live</div>
+    </div>
+    <div class="dash-body">
+      <div class="side">
+        <a class="active"><span>Overview</span></a>
+        <a><span>Accounts</span><span class="num">4</span></a>
+        <a><span>Transactions</span><span class="num">214</span></a>
+        <a><span>Cards</span><span class="num">12</span></a>
+        <div class="grp">Yield</div>
+        <a><span>Treasury</span></a>
+        <a><span>Money market</span></a>
+        <a><span>Bonds</span></a>
+        <div class="grp">Settings</div>
+        <a><span>Team</span></a>
+        <a><span>Integrations</span></a>
+      </div>
+
+      <div class="main">
+        <div class="balance-row">
+          <div class="stat-card feature">
+            <div class="lbl">Total balance</div>
+            <div class="val">$3,482,194<small>.21</small></div>
+            <div class="delta">↗ +$84,210 this month (yield)</div>
+          </div>
+          <div class="stat-card">
+            <div class="lbl">Operating</div>
+            <div class="val">$412k</div>
+            <div class="delta" style="color: rgba(255,255,255,0.5)">42 days runway</div>
+          </div>
+          <div class="stat-card">
+            <div class="lbl">Yield · APY</div>
+            <div class="val">5.42<small>%</small></div>
+            <div class="delta">↗ +0.12 vs last month</div>
+          </div>
+          <div class="stat-card">
+            <div class="lbl">Burn</div>
+            <div class="val">$92k<small>/mo</small></div>
+            <div class="delta" style="color: oklch(0.7 0.15 25)">↘ −$8k</div>
+          </div>
+        </div>
+
+        <div class="chart-card">
+          <div class="chart-head">
+            <h4>Balance · 90 days</h4>
+            <div class="chart-tabs">
+              <button>1W</button>
+              <button class="active">90D</button>
+              <button>1Y</button>
+              <button>ALL</button>
+            </div>
+          </div>
+          <svg viewBox="0 0 800 200" preserveAspectRatio="none">
+            <defs>
+              <linearGradient id="g1" x1="0" y1="0" x2="0" y2="1">
+                <stop offset="0%" stop-color="oklch(0.68 0.13 55)" stop-opacity="0.4"/>
+                <stop offset="100%" stop-color="oklch(0.68 0.13 55)" stop-opacity="0"/>
+              </linearGradient>
+            </defs>
+            <path d="M0,160 Q40,150 80,140 T160,120 T240,130 T320,100 T400,90 T480,70 T560,60 T640,40 T720,30 T800,20 L800,200 L0,200 Z" fill="url(#g1)" />
+            <path d="M0,160 Q40,150 80,140 T160,120 T240,130 T320,100 T400,90 T480,70 T560,60 T640,40 T720,30 T800,20" fill="none" stroke="oklch(0.68 0.13 55)" stroke-width="2" />
+            <line x1="0" y1="50" x2="800" y2="50" stroke="rgba(255,255,255,0.04)" stroke-dasharray="2,4" />
+            <line x1="0" y1="100" x2="800" y2="100" stroke="rgba(255,255,255,0.04)" stroke-dasharray="2,4" />
+            <line x1="0" y1="150" x2="800" y2="150" stroke="rgba(255,255,255,0.04)" stroke-dasharray="2,4" />
+          </svg>
+        </div>
+
+        <div class="tx-table">
+          <div class="tx-row head">
+            <div>Merchant</div><div class="col-date">Date</div><div class="col-status">Status</div><div class="amt">Amount</div>
+          </div>
+          <div class="tx-row">
+            <div class="merchant"><div class="ic">AW</div><div><div>AWS</div><div style="font-size: 11px; color: rgba(255,255,255,0.5)">Cloud · operating</div></div></div>
+            <div class="col-date" style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.7);">May 02, 11:42</div>
+            <div class="col-status"><span class="stat-pill ok">Settled</span></div>
+            <div class="amt">−$2,841.00</div>
+          </div>
+          <div class="tx-row">
+            <div class="merchant"><div class="ic" style="background: oklch(0.4 0.12 145 / 0.5);">YL</div><div><div>Yield · interest</div><div style="font-size: 11px; color: rgba(255,255,255,0.5)">Money market</div></div></div>
+            <div class="col-date" style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.7);">May 01, 00:01</div>
+            <div class="col-status"><span class="stat-pill ok">Settled</span></div>
+            <div class="amt pos">+$14,210.42</div>
+          </div>
+          <div class="tx-row">
+            <div class="merchant"><div class="ic">AC</div><div><div>Acme Studios</div><div style="font-size: 11px; color: rgba(255,255,255,0.5)">Wire · vendor</div></div></div>
+            <div class="col-date" style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.7);">Apr 30, 16:22</div>
+            <div class="col-status"><span class="stat-pill">Pending</span></div>
+            <div class="amt">−$48,000.00</div>
+          </div>
+          <div class="tx-row">
+            <div class="merchant"><div class="ic" style="background: oklch(0.4 0.12 145 / 0.5);">SC</div><div><div>Stripe Connect</div><div style="font-size: 11px; color: rgba(255,255,255,0.5)">Customer revenue</div></div></div>
+            <div class="col-date" style="font-family: 'JetBrains Mono', monospace; font-size: 12px; color: rgba(255,255,255,0.7);">Apr 30, 09:14</div>
+            <div class="col-status"><span class="stat-pill ok">Settled</span></div>
+            <div class="amt pos">+$28,491.00</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

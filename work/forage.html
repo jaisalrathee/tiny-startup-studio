@@ -1,0 +1,231 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#EFEBE0" />
+<title>Forage — Tiny Startup Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="_shared.css" />
+<style>
+  body {
+    background: linear-gradient(180deg, #EFEBE0, #DCD6C4);
+    min-height: 100vh;
+    display: flex; align-items: center; justify-content: center;
+    padding: 80px 24px 48px;
+    color: #15140F;
+  }
+  .case {
+    width: 100%; max-width: 1180px;
+    display: grid; grid-template-columns: 1fr 360px; gap: 56px;
+    align-items: center;
+  }
+  .info .mono { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: #6B675D; }
+  .info h1 { font-size: clamp(36px, 5.4vw, 64px); line-height: 0.95; letter-spacing: -0.03em; font-weight: 500; margin: 12px 0 16px; text-wrap: balance; }
+  .info h1 .it { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; }
+  .info p { font-size: 17px; color: #2A2823; max-width: 46ch; line-height: 1.55; }
+  .stats { display: flex; gap: 32px; margin-top: 32px; flex-wrap: wrap; }
+  .stats .stat .num { font-size: 22px; font-weight: 500; letter-spacing: -0.01em; }
+  .stats .stat .lbl { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; color: #6B675D; letter-spacing: 0.06em; margin-top: 2px; }
+  .tags { display: flex; flex-wrap: wrap; gap: 6px; margin-top: 32px; }
+  .tag { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 5px 9px; border-radius: 999px; background: rgba(0,0,0,0.06); color: #2A2823; text-transform: uppercase; letter-spacing: 0.04em; }
+
+  /* iPhone */
+  .phone-wrap { display: flex; justify-content: center; perspective: 2000px; }
+  .phone {
+    width: 360px; height: 740px;
+    max-width: 100%;
+    background: #1A1814;
+    border-radius: 48px;
+    padding: 9px;
+    box-shadow: 0 40px 100px -40px rgba(0,0,0,0.5), 0 0 0 1px rgba(0,0,0,0.3);
+    position: relative;
+  }
+  .phone::before {
+    content: ''; position: absolute; top: 16px; left: 50%; transform: translateX(-50%);
+    width: 100px; height: 28px; background: #000; border-radius: 999px; z-index: 5;
+  }
+  .screen {
+    width: 100%; height: 100%;
+    background: #FBF9F3;
+    border-radius: 40px;
+    overflow: hidden;
+    position: relative;
+    display: flex; flex-direction: column;
+  }
+  .status-bar {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 26px 0;
+    font-family: 'JetBrains Mono', monospace; font-size: 13px; font-weight: 500;
+  }
+  .status-bar .right { display: flex; gap: 4px; align-items: center; font-size: 11px; }
+  .app-content { flex: 1; padding: 44px 20px 20px; display: flex; flex-direction: column; gap: 14px; overflow: hidden; }
+  .app-head { display: flex; justify-content: space-between; align-items: center; }
+  .app-head .greeting { font-size: 13px; color: #6B675D; }
+  .app-head .greeting b { color: #15140F; font-weight: 500; }
+  .avatar { width: 32px; height: 32px; border-radius: 50%; background: linear-gradient(135deg, oklch(0.74 0.13 55), oklch(0.55 0.12 35)); }
+
+  .meal-card {
+    background: #FFFFFF;
+    border-radius: 18px;
+    overflow: hidden;
+    border: 1px solid rgba(0,0,0,0.05);
+    box-shadow: 0 6px 20px -10px rgba(0,0,0,0.1);
+  }
+  .meal-img {
+    aspect-ratio: 16/10;
+    background: linear-gradient(135deg, #6B8E5A, #3A5240);
+    position: relative;
+    display: flex; align-items: end; padding: 12px;
+  }
+  .meal-img::after {
+    content: ''; position: absolute; inset: 0;
+    background: radial-gradient(circle at 30% 30%, rgba(255,255,255,0.15), transparent 60%);
+  }
+  .meal-img .badge {
+    position: relative; z-index: 1;
+    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+    background: rgba(255,255,255,0.95); color: #15140F;
+    padding: 4px 8px; border-radius: 999px;
+    text-transform: uppercase; letter-spacing: 0.04em;
+  }
+  .meal-info { padding: 12px 14px; }
+  .meal-info .name { font-family: 'Instrument Serif', serif; font-style: italic; font-size: 22px; line-height: 1.05; letter-spacing: -0.02em; }
+  .meal-info .row { display: flex; gap: 6px; margin-top: 8px; flex-wrap: wrap; }
+  .pill { font-family: 'JetBrains Mono', monospace; font-size: 9px; padding: 3px 7px; border-radius: 999px; text-transform: uppercase; letter-spacing: 0.04em; }
+  .pill.dark { background: #15140F; color: #FBF9F3; }
+  .pill.light { background: #F4F1EA; color: #15140F; border: 1px solid rgba(0,0,0,0.06); }
+
+  .week { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .day {
+    aspect-ratio: 0.7;
+    border-radius: 8px;
+    background: #F4F1EA;
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    font-size: 10px; color: #6B675D;
+    font-family: 'JetBrains Mono', monospace;
+    text-transform: uppercase;
+  }
+  .day b { color: #15140F; font-size: 14px; font-family: 'Inter Tight'; font-weight: 500; }
+  .day.active { background: #15140F; color: #9B968A; }
+  .day.active b { color: #FBF9F3; }
+  .day.dot { position: relative; }
+  .day.dot::after { content: ''; position: absolute; bottom: 6px; width: 4px; height: 4px; border-radius: 50%; background: oklch(0.68 0.13 55); }
+
+  .cart {
+    margin-top: auto;
+    background: #15140F; color: #FBF9F3;
+    border-radius: 16px;
+    padding: 14px 16px;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .cart .l .ttl { font-size: 14px; font-weight: 500; }
+  .cart .l .sub { font-family: 'JetBrains Mono', monospace; font-size: 9px; color: #9B968A; text-transform: uppercase; margin-top: 2px; letter-spacing: 0.06em; }
+  .cart .r { display: flex; align-items: center; gap: 8px; font-size: 13px; font-weight: 500; }
+  .cart .r .arr { width: 24px; height: 24px; border-radius: 50%; background: oklch(0.68 0.13 55); color: #15140F; display: grid; place-items: center; font-size: 12px; }
+
+  .tabs { display: flex; justify-content: space-around; padding: 12px 0 24px; border-top: 1px solid rgba(0,0,0,0.06); }
+  .tab { width: 32px; height: 32px; display: grid; place-items: center; border-radius: 8px; color: #9B968A; }
+  .tab.active { color: #15140F; background: #F4F1EA; }
+
+  @media (max-width: 960px) {
+    body { padding: 72px 24px 40px; align-items: flex-start; }
+    .case { grid-template-columns: 1fr; gap: 40px; }
+    .phone-wrap { order: 2; }
+    .info { order: 1; }
+  }
+
+  @media (max-width: 480px) {
+    body { padding: 64px 16px 32px; }
+    .case { gap: 32px; }
+    .phone { width: 300px; height: 616px; border-radius: 40px; }
+    .screen { border-radius: 32px; }
+    .phone::before { width: 88px; height: 24px; }
+    .info p { font-size: 16px; }
+    .stats { gap: 24px; }
+  }
+</style>
+</head>
+<body>
+<a class="back-bar" href="../index.html"><span class="arr">←</span> All work</a>
+<div class="proj-meta"><span class="pulse-dot"></span> Live · 2024</div>
+
+<div class="case">
+  <div class="info">
+    <div class="mono">Case study · 01 / Forage</div>
+    <h1>An AI nutritionist that <span class="it">actually</span> cooks dinner.</h1>
+    <p>Forage plans your week of meals around what's in your fridge, what's in season, and what your body told you yesterday. We built the iOS app, the LLM-powered planning agent, and the Instacart hand-off in 9 days.</p>
+    <div class="stats">
+      <div class="stat"><div class="num">9 days</div><div class="lbl">Brief to TestFlight</div></div>
+      <div class="stat"><div class="num">14k</div><div class="lbl">Beta users</div></div>
+      <div class="stat"><div class="num">$1.4M</div><div class="lbl">Seed raised after</div></div>
+    </div>
+    <div class="tags">
+      <span class="tag">Swift / SwiftUI</span>
+      <span class="tag">GPT-4o · planning agent</span>
+      <span class="tag">Supabase</span>
+      <span class="tag">Instacart API</span>
+    </div>
+  </div>
+
+  <div class="phone-wrap">
+    <div class="phone">
+      <div class="screen">
+        <div class="status-bar">
+          <span>9:41</span>
+          <span class="right">●●●●</span>
+        </div>
+        <div class="app-content">
+          <div class="app-head">
+            <div class="greeting">Tuesday · <b>Hey Maya</b></div>
+            <div class="avatar"></div>
+          </div>
+
+          <div class="week">
+            <div class="day"><span>M</span><b>5</b></div>
+            <div class="day dot"><span>T</span><b>6</b></div>
+            <div class="day active dot"><span>W</span><b>7</b></div>
+            <div class="day dot"><span>T</span><b>8</b></div>
+            <div class="day"><span>F</span><b>9</b></div>
+            <div class="day"><span>S</span><b>10</b></div>
+            <div class="day"><span>S</span><b>11</b></div>
+          </div>
+
+          <div class="meal-card">
+            <div class="meal-img">
+              <span class="badge">Tonight</span>
+            </div>
+            <div class="meal-info">
+              <div class="name">Miso-glazed cod with charred scallions</div>
+              <div class="row">
+                <span class="pill dark">28 MIN</span>
+                <span class="pill light">PESCATARIAN</span>
+                <span class="pill light">540 KCAL</span>
+              </div>
+            </div>
+          </div>
+
+          <div class="cart">
+            <div class="l">
+              <div class="ttl">$32.40 · 7 items</div>
+              <div class="sub">Whole Foods · ready in 2h</div>
+            </div>
+            <div class="r">
+              Send <div class="arr">→</div>
+            </div>
+          </div>
+        </div>
+        <div class="tabs">
+          <div class="tab active">⌂</div>
+          <div class="tab">◔</div>
+          <div class="tab">+</div>
+          <div class="tab">♡</div>
+          <div class="tab">○</div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

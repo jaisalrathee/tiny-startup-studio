@@ -1,0 +1,307 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#F4F1EA" />
+<title>Northstar — Tiny Startup Studio</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link rel="stylesheet" href="_shared.css" />
+<style>
+  body { background: #F4F1EA; color: #15140F; min-height: 100vh; }
+  .wrap { max-width: 1320px; margin: 0 auto; padding: 80px 24px 64px; }
+  .head { display: grid; grid-template-columns: 1fr 1.4fr; gap: 56px; margin-bottom: 40px; align-items: end; }
+  .head .mono { font-family: 'JetBrains Mono', monospace; font-size: 11px; text-transform: uppercase; letter-spacing: 0.06em; color: #6B675D; }
+  .head h1 { font-size: clamp(36px, 5vw, 64px); line-height: 0.95; letter-spacing: -0.03em; font-weight: 500; margin: 12px 0 0; text-wrap: balance; }
+  .head h1 .it { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; }
+  .head p { color: #2A2823; font-size: 16px; line-height: 1.55; max-width: 50ch; }
+  .head .stats { display: flex; gap: 32px; margin-top: 24px; flex-wrap: wrap; }
+  .head .stat .num { font-size: 22px; font-weight: 500; letter-spacing: -0.01em; }
+  .head .stat .lbl { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; color: #6B675D; letter-spacing: 0.06em; margin-top: 2px; }
+
+  .app {
+    background: #FFFFFF;
+    border-radius: 16px;
+    border: 1px solid rgba(0,0,0,0.06);
+    box-shadow: 0 30px 80px -30px rgba(0,0,0,0.15);
+    overflow: hidden;
+  }
+  .app-header {
+    display: flex; justify-content: space-between; align-items: center;
+    padding: 14px 20px;
+    border-bottom: 1px solid rgba(0,0,0,0.06);
+    gap: 12px;
+  }
+  .app-header .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -0.01em; }
+  .app-header .brand .mk { width: 18px; height: 18px; border-radius: 4px; background: #15140F; position: relative; flex: none; }
+  .app-header .brand .mk::after { content: '★'; position: absolute; inset: 0; color: oklch(0.68 0.13 55); display: grid; place-items: center; font-size: 10px; }
+  .app-header .crumb { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #6B675D; text-transform: uppercase; letter-spacing: 0.06em; }
+  .app-header .right { display: flex; gap: 10px; align-items: center; }
+  .app-header .avatars { display: flex; }
+  .av-mini { width: 24px; height: 24px; border-radius: 50%; background: linear-gradient(135deg, oklch(0.7 0.13 55), oklch(0.5 0.1 35)); border: 2px solid #fff; margin-left: -6px; font-size: 10px; color: #fff; display: grid; place-items: center; font-weight: 500; }
+  .av-mini:first-child { margin-left: 0; }
+  .add-btn { padding: 6px 12px; border-radius: 8px; background: #15140F; color: #FBF9F3; font-size: 13px; font-weight: 500; white-space: nowrap; }
+
+  .toolbar { padding: 14px 20px; display: flex; gap: 10px; align-items: center; border-bottom: 1px solid rgba(0,0,0,0.04); font-size: 13px; flex-wrap: wrap; }
+  .toolbar .seg { display: inline-flex; gap: 2px; background: #F4F1EA; border-radius: 8px; padding: 3px; }
+  .toolbar .seg button { padding: 5px 12px; border-radius: 6px; background: transparent; border: 0; font: inherit; font-size: 12px; color: #6B675D; cursor: pointer; }
+  .toolbar .seg button.active { background: #FFF; color: #15140F; box-shadow: 0 1px 3px rgba(0,0,0,0.08); }
+  .toolbar .filters { display: flex; gap: 6px; margin-left: auto; flex-wrap: wrap; }
+  .filter-pill { padding: 5px 10px; border-radius: 6px; background: #F4F1EA; font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.04em; color: #2A2823; white-space: nowrap; }
+
+  .kanban {
+    display: grid; grid-template-columns: repeat(5, 1fr);
+    gap: 12px;
+    padding: 20px;
+    background: #FAF8F2;
+    min-height: 540px;
+    overflow-x: auto;
+  }
+  .col { display: flex; flex-direction: column; gap: 10px; min-width: 0; }
+  .col-head { display: flex; justify-content: space-between; align-items: center; padding: 4px 4px 8px; }
+  .col-head .name { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; letter-spacing: 0.06em; color: #6B675D; display: flex; align-items: center; gap: 6px; }
+  .col-head .name::before { content: ''; width: 6px; height: 6px; border-radius: 50%; background: #6B675D; }
+  .col-head .count { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: #9B968A; }
+  .col[data-stage="committed"] .col-head .name { color: oklch(0.45 0.13 55); }
+  .col[data-stage="committed"] .col-head .name::before { background: oklch(0.55 0.13 55); }
+  .col[data-stage="passed"] .col-head .name { color: #9B968A; }
+  .col[data-stage="passed"] .col-head .name::before { background: #C2BDB1; }
+
+  .card {
+    background: #FFFFFF;
+    border-radius: 10px;
+    padding: 12px;
+    border: 1px solid rgba(0,0,0,0.05);
+    display: flex; flex-direction: column; gap: 8px;
+    cursor: grab;
+    transition: transform 0.15s ease, box-shadow 0.15s ease;
+  }
+  .card:hover { transform: translateY(-2px); box-shadow: 0 8px 20px -8px rgba(0,0,0,0.1); }
+  .card .firm { display: flex; justify-content: space-between; align-items: center; gap: 8px; }
+  .card .firm .name { font-size: 14px; font-weight: 500; letter-spacing: -0.01em; }
+  .card .firm .check { font-size: 11px; color: oklch(0.5 0.12 55); font-family: 'JetBrains Mono', monospace; white-space: nowrap; }
+  .card .person { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #6B675D; }
+  .card .person .av { width: 20px; height: 20px; border-radius: 50%; background: linear-gradient(135deg, oklch(0.65 0.12 55), oklch(0.45 0.1 25)); display: grid; place-items: center; font-size: 9px; color: #fff; font-weight: 500; flex: none; }
+  .card .meta-row { display: flex; gap: 6px; flex-wrap: wrap; }
+  .badge { font-family: 'JetBrains Mono', monospace; font-size: 9px; padding: 3px 6px; border-radius: 4px; background: #F4F1EA; color: #2A2823; text-transform: uppercase; letter-spacing: 0.04em; }
+  .badge.warm { background: oklch(0.92 0.05 55); color: oklch(0.42 0.1 55); }
+  .badge.cool { background: oklch(0.94 0.04 220); color: oklch(0.42 0.1 220); }
+  .card .next { font-size: 11px; color: #6B675D; padding-top: 6px; border-top: 1px dashed rgba(0,0,0,0.06); display: flex; justify-content: space-between; gap: 6px; }
+  .card .next b { color: #15140F; font-weight: 500; }
+
+  .card.committed { background: #15140F; color: #FBF9F3; border-color: #15140F; }
+  .card.committed .firm .name { color: #FBF9F3; }
+  .card.committed .firm .check { color: oklch(0.78 0.12 55); }
+  .card.committed .person { color: rgba(255,255,255,0.6); }
+  .card.committed .badge { background: rgba(255,255,255,0.08); color: rgba(255,255,255,0.8); }
+  .card.committed .next { border-top-color: rgba(255,255,255,0.1); color: rgba(255,255,255,0.5); }
+  .card.committed .next b { color: #FBF9F3; }
+
+  .summary {
+    display: grid; grid-template-columns: repeat(4, 1fr);
+    gap: 12px;
+    padding: 16px 20px;
+    border-top: 1px solid rgba(0,0,0,0.06);
+    background: #FFFFFF;
+  }
+  .sm { display: flex; align-items: center; gap: 12px; }
+  .sm .ico { width: 36px; height: 36px; border-radius: 8px; background: #F4F1EA; display: grid; place-items: center; font-family: 'JetBrains Mono', monospace; font-size: 11px; color: #15140F; flex: none; }
+  .sm .v { font-size: 18px; font-weight: 500; letter-spacing: -0.01em; }
+  .sm .l { font-family: 'JetBrains Mono', monospace; font-size: 9px; text-transform: uppercase; color: #6B675D; letter-spacing: 0.06em; }
+
+  @media (max-width: 1100px) {
+    .head { grid-template-columns: 1fr; gap: 24px; align-items: start; }
+    .kanban {
+      grid-template-columns: repeat(5, minmax(220px, 1fr));
+      overflow-x: auto;
+      scroll-snap-type: x mandatory;
+      -webkit-overflow-scrolling: touch;
+    }
+    .col { scroll-snap-align: start; }
+    .summary { grid-template-columns: 1fr 1fr; }
+  }
+
+  @media (max-width: 760px) {
+    .wrap { padding: 72px 16px 48px; }
+    .app-header { padding: 12px 16px; }
+    .app-header .crumb { display: none; }
+    .toolbar { padding: 12px 16px; }
+    .toolbar .filters { width: 100%; margin-left: 0; }
+    .kanban { padding: 16px; gap: 10px; min-height: 500px; }
+    .summary { padding: 14px 16px; }
+    .sm .v { font-size: 16px; }
+  }
+
+  @media (max-width: 480px) {
+    .summary { grid-template-columns: 1fr; gap: 10px; padding: 14px; }
+    .head .stats { gap: 20px; }
+    .app-header .right .avatars { display: none; }
+  }
+</style>
+</head>
+<body>
+<a class="back-bar" href="../index.html"><span class="arr">←</span> All work</a>
+<div class="proj-meta">Internal · 5 days</div>
+
+<div class="wrap">
+  <div class="head">
+    <div>
+      <div class="mono">Case study · 03 / Northstar</div>
+      <h1>A fundraise CRM that <span class="it">runs</span> the round.</h1>
+    </div>
+    <div>
+      <p>Built for a YC founder mid-raise. Northstar pulls warm intros from email, drafts follow-ups in the founder's voice, and tracks every check from soft circle to wire. Replaced four spreadsheets and a Notion page.</p>
+      <div class="stats">
+        <div class="stat"><div class="num">5 days</div><div class="lbl">Brief to deploy</div></div>
+        <div class="stat"><div class="num">$1.2M</div><div class="lbl">Round closed using it</div></div>
+        <div class="stat"><div class="num">14</div><div class="lbl">Investors tracked</div></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="app">
+    <div class="app-header">
+      <div style="display:flex; align-items: center; gap: 24px; min-width: 0;">
+        <div class="brand"><span class="mk"></span> Northstar</div>
+        <div class="crumb">Pipelines / Seed Round</div>
+      </div>
+      <div class="right">
+        <div class="avatars">
+          <div class="av-mini">M</div>
+          <div class="av-mini" style="background: linear-gradient(135deg, oklch(0.65 0.12 220), oklch(0.45 0.1 250));">J</div>
+          <div class="av-mini" style="background: linear-gradient(135deg, oklch(0.7 0.12 145), oklch(0.5 0.1 165));">A</div>
+        </div>
+        <div class="add-btn">+ Investor</div>
+      </div>
+    </div>
+
+    <div class="toolbar">
+      <div class="seg">
+        <button class="active">Board</button>
+        <button>Table</button>
+        <button>Timeline</button>
+      </div>
+      <div class="filters">
+        <span class="filter-pill">Stage: All</span>
+        <span class="filter-pill">Owner: Maya</span>
+        <span class="filter-pill">+ Filter</span>
+      </div>
+    </div>
+
+    <div class="kanban">
+      <div class="col" data-stage="intro">
+        <div class="col-head"><span class="name">Warm intro</span><span class="count">3</span></div>
+        <div class="card">
+          <div class="firm"><span class="name">Sequoia</span><span class="check">$2.5M tgt</span></div>
+          <div class="person"><span class="av">RB</span> Roelof Botha</div>
+          <div class="meta-row"><span class="badge warm">Tier 1</span><span class="badge">Lead</span></div>
+          <div class="next"><span>Intro from</span> <b>P. Graham</b></div>
+        </div>
+        <div class="card">
+          <div class="firm"><span class="name">a16z</span><span class="check">$1.5M tgt</span></div>
+          <div class="person"><span class="av">CD</span> Chris Dixon</div>
+          <div class="meta-row"><span class="badge warm">Tier 1</span></div>
+          <div class="next"><span>Sent</span> <b>2d ago</b></div>
+        </div>
+        <div class="card">
+          <div class="firm"><span class="name">Greylock</span><span class="check">$750k tgt</span></div>
+          <div class="person"><span class="av">SH</span> Sarah Han</div>
+          <div class="meta-row"><span class="badge cool">Returning</span></div>
+          <div class="next"><span>Awaiting reply</span> <b>4d</b></div>
+        </div>
+      </div>
+
+      <div class="col" data-stage="meeting">
+        <div class="col-head"><span class="name">First meeting</span><span class="count">4</span></div>
+        <div class="card">
+          <div class="firm"><span class="name">Index Ventures</span><span class="check">$1M tgt</span></div>
+          <div class="person"><span class="av">MV</span> Martin Mignot</div>
+          <div class="meta-row"><span class="badge warm">Tier 1</span></div>
+          <div class="next"><span>Wed</span> <b>3:30 PM</b></div>
+        </div>
+        <div class="card">
+          <div class="firm"><span class="name">First Round</span><span class="check">$500k</span></div>
+          <div class="person"><span class="av">JG</span> Josh Kopelman</div>
+          <div class="meta-row"><span class="badge">Lead?</span></div>
+          <div class="next"><span>Mon</span> <b>11:00 AM</b></div>
+        </div>
+        <div class="card">
+          <div class="firm"><span class="name">Spark</span><span class="check">$400k</span></div>
+          <div class="person"><span class="av">NS</span> Nabeel S.</div>
+          <div class="meta-row"><span class="badge cool">2nd call</span></div>
+          <div class="next"><span>Thu</span> <b>9:00 AM</b></div>
+        </div>
+        <div class="card">
+          <div class="firm"><span class="name">Khosla</span><span class="check">$750k</span></div>
+          <div class="person"><span class="av">VK</span> Vinod K.</div>
+          <div class="meta-row"><span class="badge">Tier 2</span></div>
+          <div class="next"><span>Reschedule</span> <b>this wk</b></div>
+        </div>
+      </div>
+
+      <div class="col" data-stage="dd">
+        <div class="col-head"><span class="name">Diligence</span><span class="count">3</span></div>
+        <div class="card">
+          <div class="firm"><span class="name">Founders Fund</span><span class="check">$1.5M</span></div>
+          <div class="person"><span class="av">DC</span> Delian C.</div>
+          <div class="meta-row"><span class="badge warm">Lead</span><span class="badge">Term sheet</span></div>
+          <div class="next"><span>Reviewing</span> <b>cap table</b></div>
+        </div>
+        <div class="card">
+          <div class="firm"><span class="name">Initialized</span><span class="check">$500k</span></div>
+          <div class="person"><span class="av">GT</span> Garry Tan</div>
+          <div class="meta-row"><span class="badge cool">Returning</span></div>
+          <div class="next"><span>Refs requested</span> <b>2d</b></div>
+        </div>
+        <div class="card">
+          <div class="firm"><span class="name">South Park</span><span class="check">$250k</span></div>
+          <div class="person"><span class="av">MS</span> Mark S.</div>
+          <div class="meta-row"><span class="badge">Tier 3</span></div>
+          <div class="next"><span>Legal review</span> <b>this wk</b></div>
+        </div>
+      </div>
+
+      <div class="col" data-stage="committed">
+        <div class="col-head"><span class="name">Committed</span><span class="count">3</span></div>
+        <div class="card committed">
+          <div class="firm"><span class="name">Lightspeed</span><span class="check">$1.2M</span></div>
+          <div class="person"><span class="av">AB</span> Alex Taussig</div>
+          <div class="meta-row"><span class="badge">Lead</span><span class="badge">Signed</span></div>
+          <div class="next"><span>Wired</span> <b>Apr 28</b></div>
+        </div>
+        <div class="card committed">
+          <div class="firm"><span class="name">SV Angel</span><span class="check">$200k</span></div>
+          <div class="person"><span class="av">RC</span> Ron C.</div>
+          <div class="meta-row"><span class="badge">Signed</span></div>
+          <div class="next"><span>Wire pending</span> <b>2d</b></div>
+        </div>
+        <div class="card committed">
+          <div class="firm"><span class="name">Naval R.</span><span class="check">$100k</span></div>
+          <div class="person"><span class="av">NR</span> Angel</div>
+          <div class="meta-row"><span class="badge">Signed</span></div>
+          <div class="next"><span>Wired</span> <b>Apr 30</b></div>
+        </div>
+      </div>
+
+      <div class="col" data-stage="passed">
+        <div class="col-head"><span class="name">Passed</span><span class="count">1</span></div>
+        <div class="card" style="opacity: 0.6;">
+          <div class="firm"><span class="name">Benchmark</span><span class="check" style="color: #9B968A;">—</span></div>
+          <div class="person"><span class="av">BG</span> Bill G.</div>
+          <div class="meta-row"><span class="badge">Too early</span></div>
+          <div class="next"><span>Re-engage</span> <b>Series A</b></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="summary">
+      <div class="sm"><div class="ico">$</div><div><div class="v">$1.5M</div><div class="l">Soft-circled</div></div></div>
+      <div class="sm"><div class="ico">★</div><div><div class="v">14</div><div class="l">Active investors</div></div></div>
+      <div class="sm"><div class="ico">⏱</div><div><div class="v">22 days</div><div class="l">Round to date</div></div></div>
+      <div class="sm"><div class="ico">▲</div><div><div class="v">62%</div><div class="l">Meeting → 2nd call</div></div></div>
+    </div>
+  </div>
+</div>
+</body>
+</html>

@@ -1,0 +1,971 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+<meta name="theme-color" content="#F4F1EA" />
+<meta name="description" content="Tiny Startup Studio — Jaisal Rathee, a solo studio in London shipping AI-built MVPs, websites, and prototypes for founders. Async, fixed-fee, delivered within a week." />
+<title>Tiny Startup Studio — MVPs and websites, shipped in a week</title>
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+<style>
+  :root {
+    --bg: #F4F1EA;
+    --bg-2: #EDE9DF;
+    --ink: #15140F;
+    --ink-2: #2A2823;
+    --ink-3: #6B675D;
+    --ink-4: #9B968A;
+    --rule: #1514101A;
+    --rule-strong: #15141033;
+    --accent: oklch(0.68 0.13 55);
+    --accent-ink: oklch(0.32 0.08 55);
+    --paper: #FBF9F3;
+    --card: #FFFFFF;
+    --shadow: 0 1px 0 #15141008, 0 12px 40px -20px #15141026;
+    --gutter: 32px;
+    --section-y: 120px;
+  }
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  html { scroll-behavior: smooth; }
+  html { overflow-x: clip; }
+  body {
+    background: var(--bg);
+    color: var(--ink);
+    font-family: 'Inter Tight', system-ui, sans-serif;
+    font-feature-settings: 'ss01','cv11';
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    line-height: 1.4;
+    overflow-x: clip;
+  }
+  body.menu-open { overflow: hidden; }
+  ::selection { background: var(--ink); color: var(--bg); }
+  img, svg { display: block; max-width: 100%; }
+  a { color: inherit; }
+  button { font-family: inherit; }
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); font-weight: 500; }
+  .serif, .it { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; }
+  .container { max-width: 1280px; margin: 0 auto; padding: 0 var(--gutter); }
+  .rule { height: 1px; background: var(--rule); width: 100%; }
+  .rule-strong { height: 1px; background: var(--rule-strong); }
+  .visually-hidden { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); white-space: nowrap; border: 0; }
+
+  /* ---------- NAV ---------- */
+  nav.top {
+    position: sticky; top: 0; z-index: 50;
+    background: color-mix(in oklab, var(--bg) 85%, transparent);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border-bottom: 1px solid var(--rule);
+  }
+  nav.top .row {
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+    gap: 16px;
+  }
+  .brand { display: flex; align-items: center; gap: 10px; font-weight: 600; letter-spacing: -0.01em; text-decoration: none; color: var(--ink); }
+  .brand .dot { width: 10px; height: 10px; background: var(--ink); border-radius: 2px; flex: none; }
+  .nav-links { display: flex; gap: 28px; }
+  .nav-links a { color: var(--ink-2); text-decoration: none; font-size: 14px; transition: color 0.15s ease; }
+  .nav-links a:hover, .nav-links a:focus-visible { color: var(--ink); outline: none; }
+  .nav-cta { display: flex; align-items: center; gap: 12px; }
+  .pulse { width: 7px; height: 7px; border-radius: 50%; background: #4ADE80; box-shadow: 0 0 0 0 #4ADE8066; animation: pulse 2s infinite; flex: none; }
+  @keyframes pulse { 0% { box-shadow: 0 0 0 0 #4ADE8066; } 70% { box-shadow: 0 0 0 8px #4ADE8000; } 100% { box-shadow: 0 0 0 0 #4ADE8000; } }
+
+  .nav-toggle {
+    display: none;
+    width: 40px; height: 40px;
+    border: 1px solid var(--rule-strong);
+    border-radius: 999px;
+    background: transparent;
+    cursor: pointer;
+    position: relative;
+    padding: 0;
+  }
+  .nav-toggle span {
+    position: absolute; left: 50%; top: 50%; width: 16px; height: 1.5px; background: var(--ink); border-radius: 2px;
+    transform: translate(-50%, -50%);
+    transition: transform 0.25s ease, opacity 0.2s ease;
+  }
+  .nav-toggle span:nth-child(1) { transform: translate(-50%, calc(-50% - 5px)); }
+  .nav-toggle span:nth-child(2) { transform: translate(-50%, calc(-50% + 5px)); }
+  body.menu-open .nav-toggle span:nth-child(1) { transform: translate(-50%, -50%) rotate(45deg); }
+  body.menu-open .nav-toggle span:nth-child(2) { transform: translate(-50%, -50%) rotate(-45deg); }
+
+  .mobile-menu {
+    display: none;
+    position: fixed; inset: 64px 0 0 0; z-index: 49;
+    background: var(--bg);
+    padding: 32px var(--gutter) 48px;
+    flex-direction: column; gap: 8px;
+    border-top: 1px solid var(--rule);
+    overflow-y: auto;
+  }
+  .mobile-menu > a {
+    text-decoration: none; color: var(--ink);
+    font-size: 28px; letter-spacing: -0.02em; font-weight: 500;
+    padding: 16px 0; border-bottom: 1px solid var(--rule);
+  }
+  .mobile-menu .mm-bottom { margin-top: 24px; display: flex; flex-direction: column; gap: 16px; }
+  .mobile-menu .mm-bottom .btn { color: var(--bg); font-size: 14px; padding: 0 18px; border-bottom: none; font-weight: 500; }
+  .mobile-menu .status { font-size: 14px; color: var(--ink-3); display: flex; align-items: center; gap: 8px; }
+  body.menu-open .mobile-menu { display: flex; }
+
+  /* ---------- BUTTONS ---------- */
+  .btn {
+    display: inline-flex; align-items: center; gap: 8px;
+    height: 40px; padding: 0 18px;
+    border-radius: 999px; border: 1px solid var(--ink);
+    background: var(--ink); color: var(--bg);
+    font: inherit; font-size: 14px; font-weight: 500;
+    text-decoration: none; cursor: pointer;
+    transition: transform 0.15s ease, background 0.15s ease, color 0.15s ease, border-color 0.15s ease;
+    white-space: nowrap;
+  }
+  .btn:hover, .btn:focus-visible { transform: translateY(-1px); outline: none; }
+  .btn.ghost { background: transparent; color: var(--ink); }
+  .btn.ghost:hover { background: var(--ink); color: var(--bg); }
+  .btn .arr { transition: transform 0.2s ease; }
+  .btn:hover .arr { transform: translateX(3px); }
+
+  /* ---------- HERO ---------- */
+  .hero { padding: 100px 0 80px; position: relative; }
+  .hero-grid {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
+    align-items: end;
+  }
+  .hero h1 {
+    font-size: clamp(48px, 8vw, 112px);
+    line-height: 0.92;
+    letter-spacing: -0.04em;
+    font-weight: 500;
+    margin: 24px 0 0;
+    text-wrap: balance;
+  }
+  .hero h1 .it { letter-spacing: -0.02em; }
+  .hero-meta { display: flex; gap: 40px; margin-top: 48px; flex-wrap: wrap; }
+  .hero-meta .stat .num { font-size: 22px; font-weight: 500; letter-spacing: -0.02em; }
+  .hero-meta .stat .lbl { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; color: var(--ink-3); letter-spacing: 0.06em; margin-top: 2px; }
+  .hero-side {
+    border-left: 1px solid var(--rule);
+    padding-left: 32px;
+    align-self: end;
+    padding-bottom: 8px;
+  }
+  .hero-side p { font-size: 17px; color: var(--ink-2); max-width: 36ch; margin: 12px 0 28px; line-height: 1.5; }
+  .hero-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+  .hero-status { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-3); }
+
+  .marquee {
+    margin-top: 80px;
+    border-top: 1px solid var(--rule);
+    border-bottom: 1px solid var(--rule);
+    padding: 18px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    -webkit-mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+            mask-image: linear-gradient(90deg, transparent, #000 10%, #000 90%, transparent);
+  }
+  .marquee-track {
+    display: inline-flex; gap: 48px;
+    animation: marquee 40s linear infinite;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px; color: var(--ink-3);
+    text-transform: uppercase; letter-spacing: 0.08em;
+    will-change: transform;
+  }
+  .marquee-track span::before { content: '✦'; margin-right: 48px; color: var(--ink-4); }
+  @keyframes marquee { from { transform: translateX(0); } to { transform: translateX(-50%); } }
+
+  /* ---------- SECTION HEADER ---------- */
+  .section { padding: var(--section-y) 0; }
+  .section-head {
+    display: grid; grid-template-columns: 1fr 2fr; gap: 64px;
+    margin-bottom: 64px; align-items: end;
+  }
+  .section-head h2 {
+    font-size: clamp(36px, 5vw, 64px);
+    line-height: 0.95; letter-spacing: -0.03em;
+    font-weight: 500; margin: 12px 0 0;
+    text-wrap: balance;
+  }
+  .section-head .desc { color: var(--ink-2); font-size: 16px; max-width: 50ch; line-height: 1.6; margin-top: 24px; }
+
+  /* ---------- SERVICES ---------- */
+  .services {
+    border-top: 1px solid var(--rule-strong);
+  }
+  .service-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 1.2fr 200px;
+    gap: 32px;
+    padding: 32px 0;
+    border-bottom: 1px solid var(--rule);
+    align-items: start;
+    transition: background 0.2s ease, padding 0.2s ease;
+    cursor: pointer;
+    text-decoration: none;
+    color: inherit;
+  }
+  .service-row:hover, .service-row:focus-visible { background: var(--paper); padding-left: 16px; padding-right: 16px; outline: none; }
+  .service-row .num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-3); padding-top: 6px; }
+  .service-row .ttl { font-size: 28px; letter-spacing: -0.02em; font-weight: 500; line-height: 1.1; }
+  .service-row .desc { color: var(--ink-2); font-size: 15px; line-height: 1.55; }
+  .service-row .price { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-3); text-align: right; padding-top: 8px; }
+  .service-row .price b { display: block; font-family: 'Inter Tight', sans-serif; font-size: 16px; color: var(--ink); margin-top: 2px; font-weight: 500; }
+
+  /* ---------- WORK ---------- */
+  .work { background: var(--bg-2); }
+  .work-grid {
+    display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px;
+  }
+  .work-card {
+    background: var(--card);
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid var(--rule);
+    transition: transform 0.3s cubic-bezier(0.2,0.8,0.2,1), box-shadow 0.3s ease;
+    cursor: pointer;
+    display: flex; flex-direction: column;
+    text-decoration: none; color: inherit;
+  }
+  .work-card:hover, .work-card:focus-visible { transform: translateY(-4px); box-shadow: var(--shadow); outline: none; }
+  .work-card:hover .stage img { transform: scale(1.02); }
+  .work-card .stage {
+    position: relative;
+    aspect-ratio: 16 / 10;
+    overflow: hidden;
+    background: var(--bg);
+    display: flex; align-items: center; justify-content: center;
+  }
+  .work-card .stage img {
+    width: 100%; height: 100%; object-fit: cover; object-position: top;
+    transition: transform 0.4s cubic-bezier(0.2,0.8,0.2,1);
+  }
+  .work-card .stage .ext {
+    position: absolute; top: 12px; right: 12px;
+    width: 32px; height: 32px; border-radius: 50%;
+    background: rgba(255,255,255,0.92); color: var(--ink);
+    display: grid; place-items: center;
+    font-size: 14px; backdrop-filter: blur(8px);
+    border: 1px solid rgba(0,0,0,0.06);
+    transition: transform 0.2s ease;
+  }
+  .work-card:hover .stage .ext { transform: translate(-2px, 2px) rotate(-8deg); }
+  .work-card .meta {
+    padding: 20px 24px;
+    display: flex; justify-content: space-between; align-items: center;
+    border-top: 1px solid var(--rule);
+    gap: 12px;
+  }
+  .work-card .meta .left .ttl { font-size: 18px; font-weight: 500; letter-spacing: -0.01em; }
+  .work-card .meta .left .sub { font-size: 13px; color: var(--ink-3); margin-top: 2px; }
+  .work-card .meta .tags { display: flex; gap: 6px; flex-wrap: wrap; justify-content: end; }
+  .tag {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px; text-transform: uppercase;
+    padding: 4px 8px; border-radius: 999px;
+    background: var(--bg-2); color: var(--ink-2);
+    letter-spacing: 0.04em;
+    white-space: nowrap;
+  }
+  .tag.live { background: #DCFCE7; color: #166534; display: inline-flex; align-items: center; gap: 5px; }
+  .tag.live::before { content: ''; width: 5px; height: 5px; background: #22C55E; border-radius: 50%; }
+
+  /* ---------- PROCESS ---------- */
+  .process-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 0; border-top: 1px solid var(--rule-strong); }
+  .process-step { padding: 40px 24px 32px 0; border-right: 1px solid var(--rule); position: relative; }
+  .process-step:last-child { border-right: none; padding-right: 0; }
+  .process-step .day { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--accent-ink); letter-spacing: 0.06em; text-transform: uppercase; }
+  .process-step h4 { font-size: 22px; font-weight: 500; letter-spacing: -0.02em; margin: 16px 0 12px; }
+  .process-step p { font-size: 14px; color: var(--ink-2); line-height: 1.55; margin: 0; }
+  .process-step .dot { position: absolute; top: -5px; left: 0; width: 9px; height: 9px; background: var(--ink); border-radius: 50%; }
+
+  /* ---------- PRICING ---------- */
+  .pricing-wrap { padding: 0 32px; }
+  .pricing { background: var(--ink); color: var(--bg); border-radius: 24px; padding: 80px 64px; }
+  .pricing .container { padding: 0; }
+  .pricing .section-head h2 { color: var(--bg); }
+  .pricing .section-head .mono { color: var(--ink-4); }
+  .pricing .section-head .desc { color: var(--ink-4); }
+  .price-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 24px; margin-top: 48px; }
+  .price-card {
+    border: 1px solid #FFFFFF1F;
+    border-radius: 16px;
+    padding: 32px;
+    display: flex; flex-direction: column; gap: 24px;
+    transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
+  }
+  .price-card:hover { border-color: #FFFFFF40; transform: translateY(-2px); }
+  .price-card.feature { background: #FFFFFF08; border-color: var(--accent); }
+  .price-card .top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
+  .price-card h3 { font-size: 22px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
+  .price-card .badge { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 4px 8px; background: var(--accent); color: var(--ink); border-radius: 999px; letter-spacing: 0.04em; text-transform: uppercase; }
+  .price-card .num { font-size: 48px; font-weight: 500; letter-spacing: -0.03em; line-height: 1; }
+  .price-card .num small { font-size: 14px; color: var(--ink-4); font-weight: 400; }
+  .price-card ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; font-size: 14px; color: #FFFFFFCC; }
+  .price-card ul li { display: flex; gap: 10px; align-items: start; }
+  .price-card ul li::before { content: '+'; color: var(--accent); font-family: 'JetBrains Mono', monospace; flex: none; }
+  .price-card .btn { background: transparent; border-color: #FFFFFF40; color: var(--bg); margin-top: auto; justify-content: space-between; width: 100%; }
+  .price-card .btn:hover { background: var(--bg); color: var(--ink); border-color: var(--bg); }
+  .price-card.feature .btn { background: var(--accent); color: var(--ink); border-color: var(--accent); }
+  .price-card.feature .btn:hover { background: var(--bg); border-color: var(--bg); }
+
+  /* ---------- FAQ ---------- */
+  .faq-list { border-top: 1px solid var(--rule-strong); }
+  .faq-item { border-bottom: 1px solid var(--rule); padding: 28px 0; cursor: pointer; }
+  .faq-item summary { display: grid; grid-template-columns: 60px 1fr 24px; gap: 24px; align-items: center; list-style: none; font-size: clamp(18px, 2.2vw, 22px); font-weight: 500; letter-spacing: -0.015em; }
+  .faq-item summary::-webkit-details-marker { display: none; }
+  .faq-item summary .num { font-family: 'JetBrains Mono', monospace; font-size: 12px; color: var(--ink-3); }
+  .faq-item summary .icon { width: 24px; height: 24px; position: relative; transition: transform 0.2s ease; }
+  .faq-item summary .icon::before, .faq-item summary .icon::after { content: ''; position: absolute; background: var(--ink); }
+  .faq-item summary .icon::before { left: 50%; top: 0; bottom: 0; width: 1px; transform: translateX(-50%); transition: opacity 0.2s ease; }
+  .faq-item summary .icon::after { top: 50%; left: 0; right: 0; height: 1px; transform: translateY(-50%); }
+  .faq-item[open] summary .icon::before { opacity: 0; }
+  .faq-item .answer { color: var(--ink-2); font-size: 16px; line-height: 1.6; padding: 16px 24px 0 84px; max-width: 70ch; }
+
+  /* ---------- BOOKING ---------- */
+  .booking { padding: 120px 0 32px; }
+  .booking-card {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 0;
+    border: 1px solid var(--rule-strong); border-radius: 24px;
+    overflow: hidden; background: var(--paper);
+  }
+  .booking-left { padding: 56px; border-right: 1px solid var(--rule); display: flex; flex-direction: column; justify-content: space-between; gap: 40px; }
+  .booking-left h2 { font-size: clamp(36px, 4vw, 48px); line-height: 0.95; letter-spacing: -0.03em; font-weight: 500; margin: 16px 0 0; text-wrap: balance; }
+  .booking-meta { display: flex; flex-direction: column; gap: 12px; font-size: 14px; }
+  .booking-meta-row { display: flex; gap: 12px; align-items: center; color: var(--ink-2); }
+  .booking-meta-row svg { flex: none; opacity: 0.6; }
+
+  /* Cal-style picker */
+  .cal { padding: 32px; display: flex; flex-direction: column; gap: 20px; }
+  .cal-head { display: flex; justify-content: space-between; align-items: center; }
+  .cal-head h4 { margin: 0; font-size: 16px; font-weight: 500; }
+  .cal-nav { display: flex; gap: 4px; }
+  .cal-nav button { width: 28px; height: 28px; border-radius: 6px; border: 1px solid var(--rule); background: transparent; cursor: pointer; display: grid; place-items: center; color: var(--ink-2); }
+  .cal-nav button:hover { background: var(--bg-2); }
+  .cal-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 4px; }
+  .cal-grid .dow { text-align: center; font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--ink-3); padding: 4px 0; text-transform: uppercase; letter-spacing: 0.06em; }
+  .cal-cell { aspect-ratio: 1; display: grid; place-items: center; border-radius: 8px; font-size: 13px; color: var(--ink-2); cursor: pointer; transition: background 0.15s ease; user-select: none; }
+  .cal-cell:hover { background: var(--bg-2); }
+  .cal-cell.muted { color: var(--ink-4); }
+  .cal-cell.dot { position: relative; font-weight: 500; color: var(--ink); }
+  .cal-cell.dot::after { content: ''; position: absolute; bottom: 4px; width: 3px; height: 3px; border-radius: 50%; background: var(--accent); }
+  .cal-cell.selected { background: var(--ink); color: var(--bg); }
+  .cal-cell.selected::after { background: var(--accent); }
+  .cal-times { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; margin-top: 8px; }
+  .cal-times button { padding: 10px; border-radius: 8px; border: 1px solid var(--rule); background: var(--card); font: inherit; font-size: 13px; color: var(--ink); cursor: pointer; transition: all 0.15s ease; }
+  .cal-times button:hover { border-color: var(--ink); }
+  .cal-times button.active { background: var(--ink); color: var(--bg); border-color: var(--ink); }
+
+  /* ---------- FOOTER ---------- */
+  footer { padding: 48px 0 32px; }
+  .footer-row { display: flex; justify-content: space-between; align-items: end; gap: 24px; flex-wrap: wrap; }
+  .footer-row .left { font-size: 13px; color: var(--ink-3); }
+  .footer-row .links { display: flex; gap: 24px; font-size: 13px; flex-wrap: wrap; }
+  .footer-row .links a { color: var(--ink-2); text-decoration: none; }
+  .footer-row .links a:hover { color: var(--ink); }
+  .big-mark {
+    font-size: clamp(72px, 22vw, 320px);
+    line-height: 0.85; letter-spacing: -0.05em;
+    font-weight: 500;
+    margin: 64px 0 16px;
+    color: var(--ink);
+    word-break: break-word;
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+  @media (max-width: 1024px) {
+    :root { --section-y: 96px; --gutter: 28px; }
+    .hero-grid { gap: 48px; }
+    .section-head { gap: 48px; margin-bottom: 48px; }
+    .work-grid { grid-template-columns: repeat(2, 1fr); }
+    .pricing { padding: 64px 40px; }
+    .booking-left { padding: 48px; }
+  }
+
+  @media (max-width: 860px) {
+    :root { --section-y: 80px; --gutter: 24px; }
+    .nav-links { display: none; }
+    .nav-cta .hero-status { display: none; }
+    .nav-toggle { display: inline-block; }
+    .nav-cta .btn { display: none; }
+
+    .hero { padding: 56px 0 64px; }
+    .hero-grid { grid-template-columns: 1fr; gap: 48px; align-items: start; }
+    .hero h1 { margin-top: 16px; }
+    .hero-meta { gap: 28px; margin-top: 32px; }
+    .hero-side { border-left: none; padding-left: 0; }
+    .hero-side p { max-width: 100%; }
+    .marquee { margin-top: 56px; }
+
+    .section-head { grid-template-columns: 1fr; gap: 16px; margin-bottom: 40px; align-items: start; }
+    .section-head .desc { margin-top: 16px; }
+
+    .service-row {
+      grid-template-columns: 40px 1fr;
+      gap: 12px 16px;
+      padding: 24px 0;
+    }
+    .service-row .num { padding-top: 4px; font-size: 11px; }
+    .service-row .ttl { font-size: 22px; grid-column: 2; }
+    .service-row .desc { font-size: 14px; grid-column: 2; }
+    .service-row .price { grid-column: 2; text-align: left; padding-top: 4px; }
+    .service-row .price b { display: inline; margin-left: 6px; }
+    .service-row:hover { padding-left: 8px; padding-right: 8px; }
+
+    .work-grid { grid-template-columns: 1fr; gap: 20px; }
+    .work-card .stage { aspect-ratio: 16 / 11; }
+    .work-card .meta { padding: 18px 20px; flex-direction: column; align-items: start; gap: 12px; }
+    .work-card .meta .tags { justify-content: start; }
+
+    .process-grid { grid-template-columns: 1fr 1fr; }
+    .process-step { padding: 32px 20px 28px 0; border-bottom: 1px solid var(--rule); }
+    .process-step:nth-child(2) { border-right: none; padding-right: 0; }
+    .process-step:nth-last-child(-n+2) { border-bottom: none; }
+    .process-step h4 { font-size: 20px; }
+
+    .pricing-wrap { padding: 0 16px; }
+    .pricing { padding: 56px 28px; border-radius: 20px; }
+    .price-grid { grid-template-columns: 1fr; gap: 16px; margin-top: 32px; }
+    .price-card { padding: 28px; }
+    .price-card .num { font-size: 40px; }
+
+    .faq-item summary { grid-template-columns: 36px 1fr 20px; gap: 16px; }
+    .faq-item summary .num { font-size: 11px; }
+    .faq-item .answer { padding-left: 52px; padding-right: 0; font-size: 15px; }
+
+    .booking { padding: 80px 0 24px; }
+    .booking-card { grid-template-columns: 1fr; }
+    .booking-left { padding: 36px 28px; border-right: none; border-bottom: 1px solid var(--rule); gap: 28px; }
+    .cal { padding: 28px; }
+
+    footer { padding: 32px 0 28px; }
+    .footer-row { flex-direction: column; align-items: start; gap: 20px; }
+    .big-mark { margin: 40px 0 16px; }
+  }
+
+  @media (max-width: 520px) {
+    :root { --gutter: 20px; }
+    .hero { padding: 40px 0 48px; }
+    .hero-meta { gap: 20px; }
+    .hero-meta .stat { flex: 1 1 40%; }
+    .hero-actions .btn { flex: 1 1 calc(50% - 6px); justify-content: center; }
+    .hero-actions { gap: 8px; }
+
+    .work-card .meta .left .ttl { font-size: 16px; }
+    .price-card { padding: 24px; }
+    .pricing { padding: 44px 20px; }
+    .pricing-wrap { padding: 0 8px; }
+
+    .cal-cell { font-size: 12px; }
+    .cal-times { grid-template-columns: 1fr 1fr; }
+
+    .booking-left h2 { font-size: 32px; }
+    .booking-left { padding: 28px 20px; gap: 24px; }
+    .cal { padding: 20px; }
+
+    .footer-row .links { gap: 16px; row-gap: 8px; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *, *::before, *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+    }
+    .marquee-track { animation: none; }
+    html { scroll-behavior: auto; }
+  }
+</style>
+</head>
+<body>
+
+<!-- ============== NAV ============== -->
+<nav class="top">
+  <div class="container row">
+    <a class="brand" href="#top">
+      <span class="dot"></span>
+      <span>Tiny Startup Studio</span>
+    </a>
+    <div class="nav-links">
+      <a href="#services">Services</a>
+      <a href="#work">Work</a>
+      <a href="#process">Process</a>
+      <a href="#pricing">Pricing</a>
+      <a href="#faq">FAQ</a>
+    </div>
+    <div class="nav-cta">
+      <span class="hero-status"><span class="pulse"></span>1 slot open · May</span>
+      <a class="btn" href="#book">Book a discovery call <span class="arr">→</span></a>
+      <button class="nav-toggle" aria-label="Open menu" aria-expanded="false" aria-controls="mobile-menu">
+        <span></span><span></span>
+      </button>
+    </div>
+  </div>
+</nav>
+
+<div class="mobile-menu" id="mobile-menu" aria-label="Mobile navigation">
+  <a href="#services">Services</a>
+  <a href="#work">Work</a>
+  <a href="#process">Process</a>
+  <a href="#pricing">Pricing</a>
+  <a href="#faq">FAQ</a>
+  <div class="mm-bottom">
+    <span class="status"><span class="pulse"></span>1 slot open · May</span>
+    <a class="btn" href="#book" style="width: 100%; justify-content: center;">Book a discovery call <span class="arr">→</span></a>
+  </div>
+</div>
+
+<a id="top"></a>
+
+<!-- ============== HERO ============== -->
+<section class="hero">
+  <div class="container">
+    <div class="hero-grid">
+      <div>
+        <div class="mono">A solo studio · London, UK</div>
+        <h1>We ship the <span class="it">first</span> version of your startup.</h1>
+        <div class="hero-meta">
+          <div class="stat"><div class="num">7 days</div><div class="lbl">Typical turnaround</div></div>
+          <div class="stat"><div class="num">From $1k</div><div class="lbl">Fixed fee · no hourly</div></div>
+          <div class="stat"><div class="num">100%</div><div class="lbl">Async by default</div></div>
+        </div>
+      </div>
+      <div class="hero-side">
+        <div class="mono">How it works</div>
+        <p>I'm Jaisal — a solo founder-engineer in London. I pair my favourite AI tools with opinionated execution to take you from a Notion doc to a live product, usually inside a week. No standups, no Slack pile-ons — fully async.</p>
+        <div class="hero-actions">
+          <a class="btn" href="#book">Book a discovery call <span class="arr">→</span></a>
+          <a class="btn ghost" href="#work">See work</a>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="marquee" aria-hidden="true">
+    <div class="marquee-track">
+      <span>MVPs in a week</span>
+      <span>AI integrations</span>
+      <span>Fundraising prototypes</span>
+      <span>Internal tools</span>
+      <span>Landing pages</span>
+      <span>Async by default</span>
+      <span>MVPs in a week</span>
+      <span>AI integrations</span>
+      <span>Fundraising prototypes</span>
+      <span>Internal tools</span>
+      <span>Landing pages</span>
+      <span>Async by default</span>
+    </div>
+  </div>
+</section>
+
+<!-- ============== SERVICES ============== -->
+<section class="section" id="services">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="mono">01 — Services</div>
+      </div>
+      <div>
+        <h2>Five things I do <span class="it">extremely</span> well.</h2>
+        <p class="desc">Everything else I'll either point you to someone better or honestly tell you not to bother yet. Shipping &gt; scope. Delivered within a week.</p>
+      </div>
+    </div>
+
+    <div class="services">
+      <a class="service-row" href="#book">
+        <div class="num">/ 01</div>
+        <div class="ttl">Websites &amp; landing pages</div>
+        <div class="desc">Clean, fast, conversion-focused marketing sites built with my favourite AI tools. No auth, no database, no bloat — just a page that ships in days.</div>
+        <div class="price">From<b>$1,000</b></div>
+      </a>
+      <a class="service-row" href="#book">
+        <div class="num">/ 02</div>
+        <div class="ttl">MVP in a week</div>
+        <div class="desc">From brief on Monday to a functional, deployed product by Friday. Auth, database, payments, and the one feature that actually matters.</div>
+        <div class="price">From<b>$3,000</b></div>
+      </a>
+      <a class="service-row" href="#book">
+        <div class="num">/ 03</div>
+        <div class="ttl">AI feature integration</div>
+        <div class="desc">Plugging LLMs into existing products with care — RAG, agents, structured outputs — without the demo-day smoke and mirrors.</div>
+        <div class="price">From<b>$5,000</b></div>
+      </a>
+      <a class="service-row" href="#book">
+        <div class="num">/ 04</div>
+        <div class="ttl">Fundraising prototypes</div>
+        <div class="desc">Clickable, screen-recordable prototypes for the deck. Real-feeling enough to win the meeting; throwaway enough to iterate after.</div>
+        <div class="price">From<b>$3,000</b></div>
+      </a>
+      <a class="service-row" href="#book">
+        <div class="num">/ 05</div>
+        <div class="ttl">Internal tools</div>
+        <div class="desc">Admin panels, dashboards, ops queues, moderation tools. The unglamorous stuff that quietly runs your company.</div>
+        <div class="price">From<b>$3,000</b></div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============== WORK ============== -->
+<section class="section work" id="work">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="mono">02 — Recent work</div>
+      </div>
+      <div>
+        <h2>Three things shipped <span class="it">recently.</span></h2>
+        <p class="desc">Click any card to open the live site. Every project below went from kickoff to live in under three weeks — fully async.</p>
+      </div>
+    </div>
+
+    <div class="work-grid">
+      <!-- Signal/IDX -->
+      <a class="work-card" href="https://signal-idx-web-production.up.railway.app" target="_blank" rel="noopener">
+        <div class="stage" style="background: #0B0F1A;">
+          <img src="work/img/signal-idx.png" alt="Signal/IDX — research desk for solo founders" loading="lazy" />
+          <span class="ext" aria-hidden="true">↗</span>
+        </div>
+        <div class="meta">
+          <div class="left">
+            <div class="ttl">Signal/IDX</div>
+            <div class="sub">Startup idea intelligence · research desk</div>
+          </div>
+          <div class="tags">
+            <span class="tag live">Live</span>
+            <span class="tag">MVP</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Curate the Internet -->
+      <a class="work-card" href="https://web-production-bc6a3.up.railway.app/" target="_blank" rel="noopener">
+        <div class="stage" style="background: #FBF7EE;">
+          <img src="work/img/project-2.png" alt="Curate the Internet — weekly hand-picked website roundup" loading="lazy" />
+          <span class="ext" aria-hidden="true">↗</span>
+        </div>
+        <div class="meta">
+          <div class="left">
+            <div class="ttl">Curate the Internet</div>
+            <div class="sub">Weekly newsletter · landing page</div>
+          </div>
+          <div class="tags">
+            <span class="tag live">Live</span>
+            <span class="tag">Site</span>
+          </div>
+        </div>
+      </a>
+
+      <!-- Tiny Startups Launchpad -->
+      <a class="work-card" href="https://launchpad-production-08d2.up.railway.app/" target="_blank" rel="noopener">
+        <div class="stage" style="background: #FAFAFC;">
+          <img src="work/img/launchpad.png" alt="Tiny Startups — daily launch leaderboard" loading="lazy" />
+          <span class="ext" aria-hidden="true">↗</span>
+        </div>
+        <div class="meta">
+          <div class="left">
+            <div class="ttl">Tiny Startups</div>
+            <div class="sub">Launch platform · leaderboard</div>
+          </div>
+          <div class="tags">
+            <span class="tag live">Live</span>
+            <span class="tag">Full app</span>
+          </div>
+        </div>
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ============== PROCESS ============== -->
+<section class="section" id="process">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="mono">03 — Process</div>
+      </div>
+      <div>
+        <h2>One week, four <span class="it">deliberate</span> beats.</h2>
+        <p class="desc">No discovery sprint. No 40-page brief. One discovery call on Monday, then async execution for the rest of the week. Loom updates instead of standups.</p>
+      </div>
+    </div>
+
+    <div class="process-grid">
+      <div class="process-step">
+        <span class="dot"></span>
+        <div class="day">Day 01 · Monday</div>
+        <h4>Brief &amp; bet</h4>
+        <p>A 30-minute discovery call to agree on the one thing that has to work. I write a one-pager. You approve it before lunch.</p>
+      </div>
+      <div class="process-step">
+        <span class="dot"></span>
+        <div class="day">Day 02 · Tuesday</div>
+        <h4>Frame</h4>
+        <p>Schemas, key screens, the data model. A clickable shell of the product is in your inbox by EOD.</p>
+      </div>
+      <div class="process-step">
+        <span class="dot"></span>
+        <div class="day">Day 03–04 · Wed–Thu</div>
+        <h4>Build</h4>
+        <p>Heads-down. Loom updates twice a day. You poke at preview deploys on your own time and leave async notes.</p>
+      </div>
+      <div class="process-step">
+        <span class="dot"></span>
+        <div class="day">Day 05 · Friday</div>
+        <h4>Ship</h4>
+        <p>Production deploy, custom domain, a Loom walkthrough, and the keys handed over. Delivered within a week.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== PRICING ============== -->
+<section class="section" id="pricing" style="padding-top: 0;">
+  <div class="pricing-wrap">
+    <div class="pricing">
+      <div class="container">
+        <div class="section-head" style="margin-bottom: 0;">
+          <div>
+            <div class="mono">04 — Pricing</div>
+          </div>
+          <div>
+            <h2>Three ways to <span class="it">work</span> together.</h2>
+            <p class="desc">Fixed fees. No hourly billing. No retainers. No surprise invoices. Fully async — we talk on a 30-minute discovery call, then I ship.</p>
+          </div>
+        </div>
+
+        <div class="price-grid">
+          <div class="price-card">
+            <div class="top">
+              <h3>Site</h3>
+            </div>
+            <div class="num">From $1k</div>
+            <ul>
+              <li>Marketing site or landing page</li>
+              <li>Built with my favourite AI tools</li>
+              <li>No auth, no database, no bloat</li>
+              <li>Custom domain &amp; deploy</li>
+              <li>Live within a week</li>
+            </ul>
+            <a class="btn" href="#book">Book a discovery call <span class="arr">→</span></a>
+          </div>
+
+          <div class="price-card feature">
+            <div class="top">
+              <h3>Sprint</h3>
+              <span class="badge">Most picked</span>
+            </div>
+            <div class="num">$3k</div>
+            <ul>
+              <li>Full MVP, end-to-end</li>
+              <li>Auth, database, payments</li>
+              <li>Built with AI as the multiplier</li>
+              <li>Custom domain &amp; deploy</li>
+              <li>Live within a week</li>
+            </ul>
+            <a class="btn" href="#book">Book a discovery call <span class="arr">→</span></a>
+          </div>
+
+          <div class="price-card">
+            <div class="top">
+              <h3>Fortnight</h3>
+            </div>
+            <div class="num">$5k</div>
+            <ul>
+              <li>Larger projects &amp; v1.1 scope</li>
+              <li>AI feature integration (RAG, agents)</li>
+              <li>Polished, brand-aligned design</li>
+              <li>Production-ready handoff</li>
+              <li>Two weeks, fully async</li>
+            </ul>
+            <a class="btn" href="#book">Book a discovery call <span class="arr">→</span></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FAQ ============== -->
+<section class="section" id="faq">
+  <div class="container">
+    <div class="section-head">
+      <div>
+        <div class="mono">05 — Questions</div>
+      </div>
+      <div>
+        <h2>Things people <span class="it">usually</span> ask.</h2>
+      </div>
+    </div>
+
+    <div class="faq-list">
+      <details class="faq-item" open>
+        <summary><span class="num">/ 01</span><span>Can you really ship a real product in a week?</span><span class="icon"></span></summary>
+        <div class="answer">Yes — provided the scope is honest. I'm ruthless about cutting v1 to "the one thing this product is for." If your idea genuinely needs more, I'll tell you and quote a Fortnight.</div>
+      </details>
+      <details class="faq-item">
+        <summary><span class="num">/ 02</span><span>What does "fully async" mean?</span><span class="icon"></span></summary>
+        <div class="answer">One 30-minute discovery call to align scope. After that — no standups, no Slack pile-ons, no calendar tetris. Loom updates, written notes, preview deploys you poke at on your own time. You get your week back.</div>
+      </details>
+      <details class="faq-item">
+        <summary><span class="num">/ 03</span><span>What stack do you build on?</span><span class="icon"></span></summary>
+        <div class="answer">Default is Next.js + Postgres + Tailwind on Vercel or Railway, with whichever LLM provider makes sense. I can match an existing stack if your team is picking up the codebase later.</div>
+      </details>
+      <details class="faq-item">
+        <summary><span class="num">/ 04</span><span>Do I own the code?</span><span class="icon"></span></summary>
+        <div class="answer">Completely. Every project ships to a GitHub repo you own, with a README, env variables documented, and a Loom walkthrough of the architecture. No lock-in, no escrow.</div>
+      </details>
+      <details class="faq-item">
+        <summary><span class="num">/ 05</span><span>What's the catch with AI-built websites at $1k?</span><span class="icon"></span></summary>
+        <div class="answer">No catch — but no auth, no database, no backend. It's a marketing site or landing page, beautifully designed and conversion-tuned. If you need login, payments, or user data, that's Sprint or Fortnight territory.</div>
+      </details>
+      <details class="faq-item">
+        <summary><span class="num">/ 06</span><span>Do I get a warranty or support after delivery?</span><span class="icon"></span></summary>
+        <div class="answer">No warranty, no retainer, no support package — that's the deal. Fixed fee, ship the code, hand over the keys. If something's broken on delivery I'll fix it; beyond that, hire your own team or come back for a new sprint.</div>
+      </details>
+    </div>
+  </div>
+</section>
+
+<!-- ============== BOOKING ============== -->
+<section class="booking" id="book">
+  <div class="container">
+    <div class="booking-card">
+      <div class="booking-left">
+        <div>
+          <div class="mono">06 — Discovery call</div>
+          <h2>Book a discovery call with <span class="it">Jaisal.</span></h2>
+        </div>
+        <div class="booking-meta">
+          <div class="booking-meta-row">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><circle cx="8" cy="8" r="6.5" stroke="currentColor"/><path d="M8 4v4l2.5 1.5" stroke="currentColor" stroke-linecap="round"/></svg>
+            30 minutes · video call
+          </div>
+          <div class="booking-meta-row">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><rect x="2" y="3" width="12" height="11" rx="1" stroke="currentColor"/><path d="M2 6h12M5 1v3M11 1v3" stroke="currentColor" stroke-linecap="round"/></svg>
+            Free · no obligation · no pitch deck needed
+          </div>
+          <div class="booking-meta-row">
+            <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 4l6 4 6-4M2 4v8h12V4M2 4l6 4 6-4" stroke="currentColor" stroke-linejoin="round"/></svg>
+            One-pager scope &amp; quote afterward
+          </div>
+        </div>
+        <div>
+          <div class="mono" style="margin-bottom: 12px;">Or email me directly</div>
+          <a href="mailto:jaisal@tinystartup.studio" style="font-size: 18px; letter-spacing: -0.01em; text-decoration: none; color: var(--ink);">jaisal@tinystartup.studio</a>
+        </div>
+      </div>
+
+      <div class="cal">
+        <div class="cal-head">
+          <h4>May 2026</h4>
+          <div class="cal-nav">
+            <button aria-label="Previous month">‹</button>
+            <button aria-label="Next month">›</button>
+          </div>
+        </div>
+        <div class="cal-grid">
+          <div class="dow">Mo</div><div class="dow">Tu</div><div class="dow">We</div><div class="dow">Th</div><div class="dow">Fr</div><div class="dow">Sa</div><div class="dow">Su</div>
+          <div class="cal-cell muted">27</div><div class="cal-cell muted">28</div><div class="cal-cell muted">29</div><div class="cal-cell muted">30</div>
+          <div class="cal-cell dot">1</div><div class="cal-cell muted">2</div><div class="cal-cell muted">3</div>
+          <div class="cal-cell dot">4</div><div class="cal-cell dot">5</div><div class="cal-cell dot">6</div><div class="cal-cell dot">7</div><div class="cal-cell dot">8</div><div class="cal-cell muted">9</div><div class="cal-cell muted">10</div>
+          <div class="cal-cell dot">11</div><div class="cal-cell dot">12</div><div class="cal-cell dot selected">13</div><div class="cal-cell dot">14</div><div class="cal-cell dot">15</div><div class="cal-cell muted">16</div><div class="cal-cell muted">17</div>
+          <div class="cal-cell dot">18</div><div class="cal-cell dot">19</div><div class="cal-cell dot">20</div><div class="cal-cell dot">21</div><div class="cal-cell dot">22</div><div class="cal-cell muted">23</div><div class="cal-cell muted">24</div>
+          <div class="cal-cell dot">25</div><div class="cal-cell dot">26</div><div class="cal-cell dot">27</div><div class="cal-cell dot">28</div><div class="cal-cell dot">29</div><div class="cal-cell muted">30</div><div class="cal-cell muted">31</div>
+        </div>
+
+        <div>
+          <div class="mono" style="margin-bottom: 8px;" id="cal-time-label">Wed, May 13 · times in your zone</div>
+          <div class="cal-times">
+            <button>9:00 AM</button>
+            <button>10:00 AM</button>
+            <button class="active">11:30 AM</button>
+            <button>1:00 PM</button>
+            <button>2:30 PM</button>
+            <button>4:00 PM</button>
+          </div>
+        </div>
+        <a class="btn" id="confirm-btn" style="width: 100%; justify-content: space-between;" href="mailto:jaisal@tinystartup.studio?subject=Discovery%20call%20%E2%80%94%2011:30%20AM%20Wed%20May%2013">Confirm 11:30 AM · Wed May 13 <span class="arr">→</span></a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ============== FOOTER ============== -->
+<footer>
+  <div class="container">
+    <div class="big-mark">Tiny Startup <span class="it">Studio.</span></div>
+    <div class="rule" style="margin-bottom: 24px;"></div>
+    <div class="footer-row">
+      <div class="left">
+        <div class="mono">© 2026 · Built solo by Jaisal Rathee</div>
+        <div style="margin-top: 6px; color: var(--ink-2); font-size: 13px;">London, UK</div>
+      </div>
+      <div class="links">
+        <a href="#services">Services</a>
+        <a href="#work">Work</a>
+        <a href="#process">Process</a>
+        <a href="#book">Book</a>
+        <a href="mailto:jaisal@tinystartup.studio">Email</a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  // Mobile menu toggle
+  const toggle = document.querySelector('.nav-toggle');
+  const body = document.body;
+  toggle.addEventListener('click', () => {
+    const isOpen = body.classList.toggle('menu-open');
+    toggle.setAttribute('aria-expanded', isOpen ? 'true' : 'false');
+    toggle.setAttribute('aria-label', isOpen ? 'Close menu' : 'Open menu');
+  });
+  document.querySelectorAll('.mobile-menu a').forEach(a => {
+    a.addEventListener('click', () => {
+      body.classList.remove('menu-open');
+      toggle.setAttribute('aria-expanded', 'false');
+      toggle.setAttribute('aria-label', 'Open menu');
+    });
+  });
+
+  // Booking calendar interactivity
+  const dayLabel = document.getElementById('cal-time-label');
+  const confirmBtn = document.getElementById('confirm-btn');
+  const monthName = 'May';
+  let selectedDay = '13';
+  let selectedTime = '11:30 AM';
+  const dayName = (d) => {
+    const map = { '1':'Fri','4':'Mon','5':'Tue','6':'Wed','7':'Thu','8':'Fri','11':'Mon','12':'Tue','13':'Wed','14':'Thu','15':'Fri','18':'Mon','19':'Tue','20':'Wed','21':'Thu','22':'Fri','25':'Mon','26':'Tue','27':'Wed','28':'Thu','29':'Fri' };
+    return map[d] || 'Wed';
+  };
+  const updateLabels = () => {
+    dayLabel.textContent = `${dayName(selectedDay)}, ${monthName} ${selectedDay} · times in your zone`;
+    confirmBtn.firstChild.textContent = `Confirm ${selectedTime} · ${dayName(selectedDay)} ${monthName} ${selectedDay} `;
+  };
+  document.querySelectorAll('.cal-cell.dot').forEach(cell => {
+    cell.addEventListener('click', () => {
+      document.querySelectorAll('.cal-cell.selected').forEach(c => c.classList.remove('selected'));
+      cell.classList.add('selected');
+      selectedDay = cell.textContent.trim();
+      updateLabels();
+    });
+  });
+  document.querySelectorAll('.cal-times button').forEach(btn => {
+    btn.addEventListener('click', () => {
+      document.querySelectorAll('.cal-times button.active').forEach(b => b.classList.remove('active'));
+      btn.classList.add('active');
+      selectedTime = btn.textContent.trim();
+      updateLabels();
+    });
+  });
+</script>
+
+</body>
+</html>
