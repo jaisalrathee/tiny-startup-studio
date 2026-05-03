@@ -558,8 +558,8 @@
     pointer-events: none;
     z-index: 0;
     opacity: 0;
-    transition: opacity 1.2s ease;
-    will-change: transform;
+    transition: opacity 1.2s ease, filter 2.4s cubic-bezier(0.4,0,0.2,1);
+    will-change: transform, filter;
     /* center on (0,0) by default — JS moves it */
     left: 0; top: 0;
     transform: translate(-50%, -50%);
@@ -575,7 +575,8 @@
       0 0  60px 20px oklch(0.80 0.17 66 / 0.12),
       0 0 160px 60px oklch(0.74 0.14 60 / 0.07),
       0 0 320px 120px oklch(0.68 0.12 54 / 0.04);
-    filter: blur(1px);
+    /* hue-rotate shifts base amber (hsl ~40°) smoothly toward blue */
+    filter: blur(1px) hue-rotate(0deg);
   }
   body.cursor-active #cursor-glow { opacity: 1; }
 
@@ -1187,13 +1188,74 @@
     });
   });
 
-  // ── CURSOR GLOW ORB (lerp-following) ─────────────────────────────────────
+  // ── CURSOR GLOW ORB (lerp-following + section hue shift) ─────────────────
   (function () {
     const orb = document.getElementById('cursor-glow');
     if (!orb || !window.matchMedia('(pointer:fine)').matches) return;
 
-    let tx = -9999, ty = -9999; // target (mouse)
-    let cx = -9999, cy = -9999; // current (lerped)
+    // ── hue-rotate degrees per section (amber → blue)
+    // base colour is warm amber ~40° HSL; rotating toward blue = +160–200°
+    const SECTION_HUES = {
+      'top':      0,    // hero   — warm amber/gold
+      'services': 28,   // —— soft coral-orange
+      'work':     62,   // —— yellow-chartreuse
+      'process':  100,  // —— sage green
+      'pricing':  140,  // —— cool teal-green
+      'faq':      168,  // —— teal
+      'book':     210,  // —— soft periwinkle blue
+    };
+
+    let currentHue = 0;
+    let targetHue  = 0;
+    let hueRaf;
+
+    function animateHue() {
+      const diff = targetHue - currentHue;
+      if (Math.abs(diff) < 0.15) {
+        currentHue = targetHue;
+        orb.style.filter = `blur(1px) hue-rotate(${currentHue}deg)`;
+        return;
+      }
+      currentHue += diff * 0.035; // very slow, dreamlike
+      orb.style.filter = `blur(1px) hue-rotate(${currentHue}deg)`;
+      hueRaf = requestAnimationFrame(animateHue);
+    }
+
+    function setHue(deg) {
+      targetHue = deg;
+      cancelAnimationFrame(hueRaf);
+      hueRaf = requestAnimationFrame(animateHue);
+    }
+
+    // IntersectionObserver — whichever section is most visible wins
+    const sectionIds = Object.keys(SECTION_HUES);
+    const visibility = {};
+    sectionIds.forEach(id => { visibility[id] = 0; });
+
+    const hueObserver = new IntersectionObserver(entries => {
+      entries.forEach(e => {
+        const id = e.target.id || 'top';
+        visibility[id] = e.intersectionRatio;
+      });
+      // pick the section with the most viewport coverage
+      let best = 'top', bestRatio = -1;
+      for (const [id, ratio] of Object.entries(visibility)) {
+        if (ratio > bestRatio) { bestRatio = ratio; best = id; }
+      }
+      setHue(SECTION_HUES[best] ?? 0);
+    }, {
+      threshold: Array.from({ length: 21 }, (_, i) => i * 0.05),
+    });
+
+    // Observe each section anchor / section element
+    sectionIds.forEach(id => {
+      const el = document.getElementById(id);
+      if (el) hueObserver.observe(el);
+    });
+
+    // ── lerp position
+    let tx = -9999, ty = -9999;
+    let cx = -9999, cy = -9999;
     let active = false;
 
     document.addEventListener('mousemove', e => {
@@ -1204,11 +1266,9 @@
         document.body.classList.add('cursor-active');
       }
     });
-
-    // Leave page → drift off-screen
     document.addEventListener('mouseleave', () => { tx = cx - 200; ty = cy + 300; });
 
-    const LERP = 0.072; // lower = lazier / dreamier
+    const LERP = 0.072;
     function lerp(a, b, t) { return a + (b - a) * t; }
 
     (function tick() {
