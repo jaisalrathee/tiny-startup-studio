@@ -1141,7 +1141,7 @@
 </footer>
 
 <script>
-  // Mobile menu toggle
+  // ── MOBILE MENU ───────────────────────────────────────────────────────────
   const toggle = document.querySelector('.nav-toggle');
   const body = document.body;
   toggle.addEventListener('click', () => {
@@ -1157,36 +1157,124 @@
     });
   });
 
-  // Booking calendar interactivity
-  const dayLabel = document.getElementById('cal-time-label');
-  const confirmBtn = document.getElementById('confirm-btn');
-  const monthName = 'May';
-  let selectedDay = '13';
-  let selectedTime = '11:30 AM';
-  const dayName = (d) => {
-    const map = { '1':'Fri','4':'Mon','5':'Tue','6':'Wed','7':'Thu','8':'Fri','11':'Mon','12':'Tue','13':'Wed','14':'Thu','15':'Fri','18':'Mon','19':'Tue','20':'Wed','21':'Thu','22':'Fri','25':'Mon','26':'Tue','27':'Wed','28':'Thu','29':'Fri' };
-    return map[d] || 'Wed';
-  };
-  const updateLabels = () => {
-    dayLabel.textContent = `${dayName(selectedDay)}, ${monthName} ${selectedDay} · times in your zone`;
-    confirmBtn.firstChild.textContent = `Confirm ${selectedTime} · ${dayName(selectedDay)} ${monthName} ${selectedDay} `;
-  };
-  document.querySelectorAll('.cal-cell.dot').forEach(cell => {
-    cell.addEventListener('click', () => {
-      document.querySelectorAll('.cal-cell.selected').forEach(c => c.classList.remove('selected'));
-      cell.classList.add('selected');
-      selectedDay = cell.textContent.trim();
-      updateLabels();
+  // ── BOOKING CALENDAR ─────────────────────────────────────────────────────
+  // FIX: full dynamic calendar with working nav + href update on every change
+  (function () {
+    const MONTHS = ['January','February','March','April','May','June',
+                    'July','August','September','October','November','December'];
+    const DAY_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
+
+    const dayLabel  = document.getElementById('cal-time-label');
+    const confirmBtn = document.getElementById('confirm-btn');
+    const calGrid   = document.querySelector('.cal-grid');
+    const calH4     = document.querySelector('.cal-head h4');
+    const prevBtn   = document.querySelector('.cal-nav button:first-child');
+    const nextBtn   = document.querySelector('.cal-nav button:last-child');
+
+    const MIN_YEAR = 2026, MIN_MONTH = 4; // May 2026 — don't go earlier
+    let calYear  = 2026;
+    let calMonth = 4;         // 0-indexed
+    let selDay   = 13;        // selected day number
+    let selTime  = '11:30 AM';
+
+    function getDN(y, m, d) { return DAY_SHORT[new Date(y, m, d).getDay()]; }
+
+    // FIX 2: update both text AND href every time selection changes
+    function updateLabels() {
+      if (!selDay) return;
+      const dn = getDN(calYear, calMonth, selDay);
+      const mn = MONTHS[calMonth];
+      dayLabel.textContent = `${dn}, ${mn} ${selDay} · times in your zone`;
+      confirmBtn.firstChild.textContent = `Confirm ${selTime} · ${dn} ${mn} ${selDay} `;
+      const subj = encodeURIComponent(`Discovery call — ${selTime} ${dn} ${mn} ${selDay}`);
+      confirmBtn.setAttribute('href', `mailto:jaisal@tinystartup.studio?subject=${subj}`);
+    }
+
+    // FIX 3: dynamically build calendar grid for any month
+    function buildCal() {
+      calH4.textContent = `${MONTHS[calMonth]} ${calYear}`;
+
+      // Disable prev at earliest allowed month
+      const atMin = calYear === MIN_YEAR && calMonth === MIN_MONTH;
+      prevBtn.disabled = atMin;
+      prevBtn.style.opacity = atMin ? '0.3' : '';
+      prevBtn.style.pointerEvents = atMin ? 'none' : '';
+
+      // Keep day-of-week headers, remove old cells
+      Array.from(calGrid.querySelectorAll('.cal-cell')).forEach(c => c.remove());
+
+      const firstDow     = (new Date(calYear, calMonth, 1).getDay() + 6) % 7; // Mon=0
+      const daysInMonth  = new Date(calYear, calMonth + 1, 0).getDate();
+      const daysInPrev   = new Date(calYear, calMonth, 0).getDate();
+
+      // Leading overflow cells (prev month)
+      for (let i = firstDow - 1; i >= 0; i--) {
+        const c = document.createElement('div');
+        c.className = 'cal-cell muted';
+        c.textContent = daysInPrev - i;
+        calGrid.appendChild(c);
+      }
+
+      // Current month
+      for (let d = 1; d <= daysInMonth; d++) {
+        const dow = new Date(calYear, calMonth, d).getDay();
+        const wkday = dow !== 0 && dow !== 6;
+        const c = document.createElement('div');
+        c.className = wkday ? 'cal-cell dot' : 'cal-cell muted';
+        if (wkday && d === selDay) c.classList.add('selected');
+        c.textContent = d;
+        if (wkday) {
+          c.addEventListener('click', () => {
+            calGrid.querySelectorAll('.cal-cell.selected').forEach(x => x.classList.remove('selected'));
+            c.classList.add('selected');
+            selDay = d;
+            updateLabels();
+          });
+        }
+        calGrid.appendChild(c);
+      }
+
+      // Trailing overflow cells (next month)
+      const total   = calGrid.querySelectorAll('.cal-cell').length;
+      const trail   = (7 - (total % 7)) % 7;
+      for (let i = 1; i <= trail; i++) {
+        const c = document.createElement('div');
+        c.className = 'cal-cell muted';
+        c.textContent = i;
+        calGrid.appendChild(c);
+      }
+
+      // If selected day doesn't exist in new month, clear it
+      if (selDay > daysInMonth) {
+        selDay = null;
+        dayLabel.textContent = `${MONTHS[calMonth]} · pick a day`;
+        confirmBtn.firstChild.textContent = `Pick a day to confirm `;
+        confirmBtn.setAttribute('href', 'mailto:jaisal@tinystartup.studio');
+      } else {
+        updateLabels();
+      }
+    }
+
+    prevBtn.addEventListener('click', () => {
+      if (calMonth === 0) { calMonth = 11; calYear--; } else calMonth--;
+      buildCal();
     });
-  });
-  document.querySelectorAll('.cal-times button').forEach(btn => {
-    btn.addEventListener('click', () => {
-      document.querySelectorAll('.cal-times button.active').forEach(b => b.classList.remove('active'));
-      btn.classList.add('active');
-      selectedTime = btn.textContent.trim();
-      updateLabels();
+    nextBtn.addEventListener('click', () => {
+      if (calMonth === 11) { calMonth = 0; calYear++; } else calMonth++;
+      buildCal();
     });
-  });
+
+    document.querySelectorAll('.cal-times button').forEach(btn => {
+      btn.addEventListener('click', () => {
+        document.querySelectorAll('.cal-times button.active').forEach(b => b.classList.remove('active'));
+        btn.classList.add('active');
+        selTime = btn.textContent.trim();
+        updateLabels();
+      });
+    });
+
+    buildCal(); // initialise
+  })();
 
   // ── CURSOR GLOW ORB (lerp-following + section hue shift) ─────────────────
   (function () {
@@ -1280,6 +1368,17 @@
   })();
 
   // ── SCROLL REVEALS ────────────────────────────────────────────────────────
+  function instantReveal(el) {
+    el.style.transition = 'none';
+    el.classList.add('revealed');
+    requestAnimationFrame(() => requestAnimationFrame(() => { el.style.transition = ''; }));
+  }
+  // Immediately reveal anything already visible on load (no flash)
+  document.querySelectorAll('[data-reveal]').forEach(el => {
+    const r = el.getBoundingClientRect();
+    if (r.top < window.innerHeight && r.bottom > 0) instantReveal(el);
+  });
+  // Observer for elements that scroll into view later
   const revealObserver = new IntersectionObserver((entries) => {
     entries.forEach(e => {
       if (e.isIntersecting) {
@@ -1287,8 +1386,19 @@
         revealObserver.unobserve(e.target);
       }
     });
-  }, { threshold: 0.08, rootMargin: '0px 0px -40px 0px' });
-  document.querySelectorAll('[data-reveal]').forEach(el => revealObserver.observe(el));
+  }, { threshold: 0.05, rootMargin: '0px 0px 0px 0px' });
+  document.querySelectorAll('[data-reveal]:not(.revealed)').forEach(el => revealObserver.observe(el));
+  // Bug 4 fix: reveal section content when nav links are clicked
+  document.querySelectorAll('a[href^="#"]').forEach(link => {
+    link.addEventListener('click', () => {
+      const id = link.getAttribute('href').slice(1);
+      const section = document.getElementById(id);
+      if (!section) return;
+      setTimeout(() => {
+        section.querySelectorAll('[data-reveal]:not(.revealed)').forEach(instantReveal);
+      }, 350);
+    });
+  });
 
   // ── PROCESS TIMELINE ─────────────────────────────────────────────────────
   (function () {
