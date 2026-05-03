@@ -314,6 +314,17 @@
   .price-card.feature .btn { background: var(--accent); color: var(--ink); border-color: var(--accent); }
   .price-card.feature .btn:hover { background: var(--bg); border-color: var(--bg); }
 
+  /* ---------- Support strip ---------- */
+  .support-strip { border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 28px 0; }
+  .support-strip .container { display: flex; align-items: center; gap: 32px; flex-wrap: wrap; }
+  .support-strip .s-label { font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-4); white-space: nowrap; }
+  .support-strip .s-body { flex: 1; min-width: 200px; }
+  .support-strip .s-title { font-size: 15px; font-weight: 500; color: var(--ink); letter-spacing: -0.01em; }
+  .support-strip .s-desc { font-size: 13px; color: var(--ink-3); margin-top: 3px; line-height: 1.5; }
+  .support-strip .s-price { font-size: 13px; font-weight: 500; color: var(--ink-2); white-space: nowrap; }
+  .support-strip .s-cta { font-size: 13px; color: var(--ink-3); text-decoration: none; display: flex; align-items: center; gap: 6px; border-bottom: 1px solid var(--rule-strong); padding-bottom: 1px; transition: color 0.15s, border-color 0.15s; white-space: nowrap; }
+  .support-strip .s-cta:hover { color: var(--ink); border-color: var(--ink); }
+
   /* ---------- FAQ ---------- */
   .faq-list { border-top: 1px solid var(--rule-strong); }
   .faq-item { border-bottom: 1px solid var(--rule); padding: 28px 0; cursor: pointer; }
@@ -433,6 +444,7 @@
     .price-grid { grid-template-columns: 1fr; gap: 16px; margin-top: 32px; }
     .price-card { padding: 28px; }
     .price-card .num { font-size: 40px; }
+    .support-strip .s-price { display: none; }
 
     .faq-item summary { grid-template-columns: 36px 1fr 20px; gap: 16px; }
     .faq-item summary .num { font-size: 11px; }
@@ -791,6 +803,19 @@
     </div>
   </div>
 </section>
+
+<!-- ============== SUPPORT STRIP ============== -->
+<div class="support-strip">
+  <div class="container">
+    <span class="s-label">Post-project</span>
+    <div class="s-body">
+      <div class="s-title">Retain &amp; support</div>
+      <div class="s-desc">Bug fixes, content updates, small feature additions. Once we've shipped, I'm available on a monthly basis to keep things running.</div>
+    </div>
+    <span class="s-price">From $500 / mo</span>
+    <a class="s-cta" href="#book">Ask about support <span>→</span></a>
+  </div>
+</div>
 
 <!-- ============== FAQ ============== -->
 <section class="section" id="faq">
