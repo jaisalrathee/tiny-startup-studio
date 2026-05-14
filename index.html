@@ -66,8 +66,9 @@
     --ink-4: #9B968A;
     --rule: #1514101A;
     --rule-strong: #15141033;
-    --accent: oklch(0.68 0.13 55);
-    --accent-ink: oklch(0.32 0.08 55);
+    --accent: #7c3aed;
+    --accent-ink: #4c1d95;
+    --holo: linear-gradient(135deg, #7c3aed 0%, #4f46e5 16%, #2563eb 30%, #0ea5e9 46%, #06b6d4 60%, #10b981 78%, #84cc16 100%);
     --paper: #FBF9F3;
     --card: #FFFFFF;
     --shadow: 0 1px 0 #15141008, 0 12px 40px -20px #15141026;
@@ -347,10 +348,10 @@
     transition: border-color 0.2s ease, background 0.2s ease, transform 0.2s ease;
   }
   .price-card:hover { border-color: #FFFFFF40; transform: translateY(-2px); }
-  .price-card.feature { background: #FFFFFF08; border-color: var(--accent); }
+  .price-card.feature { background: #FFFFFF08; border-color: #7c3aed; }
   .price-card .top { display: flex; justify-content: space-between; align-items: center; gap: 12px; }
   .price-card h3 { font-size: 22px; font-weight: 500; margin: 0; letter-spacing: -0.01em; }
-  .price-card .badge { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 4px 8px; background: var(--accent); color: var(--ink); border-radius: 999px; letter-spacing: 0.04em; text-transform: uppercase; }
+  .price-card .badge { font-family: 'JetBrains Mono', monospace; font-size: 10px; padding: 4px 8px; background: var(--holo); color: #fff; border-radius: 999px; letter-spacing: 0.04em; text-transform: uppercase; }
   .price-card .num { font-size: 48px; font-weight: 500; letter-spacing: -0.03em; line-height: 1; }
   .price-card .num small { font-size: 14px; color: var(--ink-4); font-weight: 400; }
   .price-card ul { list-style: none; padding: 0; margin: 0; display: flex; flex-direction: column; gap: 10px; font-size: 14px; color: #FFFFFFCC; }
@@ -358,8 +359,8 @@
   .price-card ul li::before { content: '+'; color: var(--accent); font-family: 'JetBrains Mono', monospace; flex: none; }
   .price-card .btn { background: transparent; border-color: #FFFFFF40; color: var(--bg); margin-top: auto; justify-content: space-between; width: 100%; }
   .price-card .btn:hover { background: var(--bg); color: var(--ink); border-color: var(--bg); }
-  .price-card.feature .btn { background: var(--accent); color: var(--ink); border-color: var(--accent); }
-  .price-card.feature .btn:hover { background: var(--bg); border-color: var(--bg); }
+  .price-card.feature .btn { background: var(--holo); color: #fff; border-color: transparent; }
+  .price-card.feature .btn:hover { background: var(--bg); color: var(--ink); border-color: var(--bg); }
 
   /* ---------- Support strip ---------- */
   .support-strip { border-top: 1px solid var(--rule); border-bottom: 1px solid var(--rule); padding: 28px 0; }
@@ -422,7 +423,7 @@
   .intake-error { font-size: 12px; color: #EF4444; display: none; }
   .intake-error.visible { display: block; }
   .intake-next { display: flex; align-items: center; justify-content: space-between; padding: 13px 18px; border-radius: 100px; background: var(--ink); color: var(--bg); font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; border: none; width: 100%; transition: background 0.18s ease; letter-spacing: -0.01em; }
-  .intake-next:hover { background: var(--accent); color: var(--bg); }
+  .intake-next:hover { background: var(--holo); color: #fff; }
 
   /* Step 2 — calendar (hidden until form complete) */
   .cal-step { display: none; flex-direction: column; gap: 20px; }
@@ -597,15 +598,15 @@
     /* layered glow: hot bright core → warm mid → wide diffuse halo */
     background: radial-gradient(
       circle,
-      oklch(0.82 0.18 68 / 0.22)  0%,
-      oklch(0.76 0.15 62 / 0.13) 28%,
-      oklch(0.70 0.13 55 / 0.06) 55%,
+      rgba(124, 58, 237, 0.18)  0%,
+      rgba(79,  70, 229, 0.10) 28%,
+      rgba(37, 99, 235, 0.05)  55%,
       transparent 70%
     );
     box-shadow:
-      0 0  60px 20px oklch(0.80 0.17 66 / 0.12),
-      0 0 160px 60px oklch(0.74 0.14 60 / 0.07),
-      0 0 320px 120px oklch(0.68 0.12 54 / 0.04);
+      0 0  60px 20px rgba(124, 58, 237, 0.10),
+      0 0 160px 60px rgba(79,  70, 229, 0.06),
+      0 0 320px 120px rgba(37, 99, 235, 0.03);
     /* hue-rotate shifts base amber (hsl ~40°) smoothly toward blue */
     filter: blur(1px) hue-rotate(0deg);
   }
@@ -672,9 +673,9 @@
     transition: background 0.4s ease, transform 0.4s ease, box-shadow 0.4s ease;
   }
   .process-step.step-lit .dot {
-    background: oklch(0.68 0.13 55);
+    background: var(--accent);
     transform: scale(1.5);
-    box-shadow: 0 0 0 5px oklch(0.68 0.13 55 / 0.12);
+    box-shadow: 0 0 0 5px rgba(124, 58, 237, 0.15);
   }
   .process-step .day { transition: color 0.4s ease; }
   .process-step.step-lit .day { color: var(--accent-ink); }
@@ -819,31 +820,31 @@
         <div class="num">/ 01</div>
         <div class="ttl">Websites &amp; landing pages</div>
         <div class="desc">Clean, fast, conversion-focused marketing sites built with my favourite AI tools. No auth, no database, no bloat — just a page that ships in days.</div>
-        <div class="price">From<b>$1,000</b></div>
+        <div class="price">From<b>£2,500</b></div>
       </a>
       <a class="service-row" href="#book" data-reveal data-delay="2">
         <div class="num">/ 02</div>
         <div class="ttl">MVP in a week</div>
         <div class="desc">From brief on Monday to a functional, deployed product by Friday. Auth, database, payments, and the one feature that actually matters.</div>
-        <div class="price">From<b>$3,000</b></div>
+        <div class="price">From<b>£5,000</b></div>
       </a>
       <a class="service-row" href="#book" data-reveal data-delay="3">
         <div class="num">/ 03</div>
         <div class="ttl">AI feature integration</div>
         <div class="desc">Plugging LLMs into existing products with care — RAG, agents, structured outputs — without the demo-day smoke and mirrors.</div>
-        <div class="price">From<b>$5,000</b></div>
+        <div class="price">From<b>£5,000</b></div>
       </a>
       <a class="service-row" href="#book" data-reveal data-delay="4">
         <div class="num">/ 04</div>
         <div class="ttl">Fundraising prototypes</div>
         <div class="desc">Clickable, screen-recordable prototypes for the deck. Real-feeling enough to win the meeting; throwaway enough to iterate after.</div>
-        <div class="price">From<b>$3,000</b></div>
+        <div class="price">From<b>£5,000</b></div>
       </a>
       <a class="service-row" href="#book" data-reveal data-delay="4">
         <div class="num">/ 05</div>
         <div class="ttl">Internal tools</div>
         <div class="desc">Admin panels, dashboards, ops queues, moderation tools. The unglamorous stuff that quietly runs your company.</div>
-        <div class="price">From<b>$3,000</b></div>
+        <div class="price">From<b>£5,000</b></div>
       </a>
     </div>
   </div>
@@ -1059,7 +1060,7 @@
             <div class="top">
               <h3>Site</h3>
             </div>
-            <div class="num">From $1k</div>
+            <div class="num">From £2.5k</div>
             <ul>
               <li>Marketing site or landing page</li>
               <li>Built with my favourite AI tools</li>
@@ -1075,7 +1076,7 @@
               <h3>Sprint</h3>
               <span class="badge">Most picked</span>
             </div>
-            <div class="num">$3k</div>
+            <div class="num">£5k</div>
             <ul>
               <li>Full MVP, end-to-end</li>
               <li>Auth, database, payments</li>
@@ -1090,7 +1091,7 @@
             <div class="top">
               <h3>Fortnight</h3>
             </div>
-            <div class="num">$5k</div>
+            <div class="num">£9k</div>
             <ul>
               <li>Larger projects &amp; v1.1 scope</li>
               <li>AI feature integration (RAG, agents)</li>
@@ -1114,7 +1115,7 @@
       <div class="s-title">Retain &amp; support</div>
       <div class="s-desc">Bug fixes, content updates, small feature additions. Once we've shipped, I'm available on a monthly basis to keep things running.</div>
     </div>
-    <span class="s-price">From $500 / mo</span>
+    <span class="s-price">From £500 / mo</span>
     <a class="s-cta" href="#book">Ask about support <span>→</span></a>
   </div>
 </div>
