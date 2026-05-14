@@ -180,32 +180,162 @@
   .btn:hover .arr { transform: translateX(3px); }
 
   /* ---------- HERO ---------- */
-  .hero { padding: 100px 0 80px; position: relative; }
+  .hero { padding: 80px 0 60px; position: relative; }
   .hero-grid {
     display: grid; grid-template-columns: 1fr 1fr; gap: 64px;
-    align-items: end;
+    align-items: center;
   }
   .hero h1 {
-    font-size: clamp(48px, 8vw, 112px);
+    font-size: clamp(44px, 6.5vw, 96px);
     line-height: 0.92;
     letter-spacing: -0.04em;
     font-weight: 500;
-    margin: 24px 0 0;
+    margin: 20px 0 0;
     text-wrap: balance;
   }
   .hero h1 .it { letter-spacing: -0.02em; }
-  .hero-meta { display: flex; gap: 40px; margin-top: 48px; flex-wrap: wrap; }
-  .hero-meta .stat .num { font-size: 22px; font-weight: 500; letter-spacing: -0.02em; }
+  .hero-left-desc { font-size: 17px; color: var(--ink-2); max-width: 42ch; margin: 20px 0 28px; line-height: 1.55; }
+  .hero-meta { display: flex; gap: 32px; margin-top: 32px; padding-top: 28px; border-top: 1px solid var(--rule); flex-wrap: wrap; }
+  .hero-meta .stat .num { font-size: 20px; font-weight: 500; letter-spacing: -0.02em; }
   .hero-meta .stat .lbl { font-family: 'JetBrains Mono', monospace; font-size: 10px; text-transform: uppercase; color: var(--ink-3); letter-spacing: 0.06em; margin-top: 2px; }
-  .hero-side {
-    border-left: 1px solid var(--rule);
-    padding-left: 32px;
-    align-self: end;
-    padding-bottom: 8px;
-  }
-  .hero-side p { font-size: 17px; color: var(--ink-2); max-width: 36ch; margin: 12px 0 28px; line-height: 1.5; }
   .hero-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
   .hero-status { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-3); }
+
+  /* ── Hero artifact card ── */
+  .artifact-wrap {
+    perspective: 1100px;
+    perspective-origin: 50% 50%;
+    display: flex; align-items: center; justify-content: center;
+  }
+  .artifact-card {
+    position: relative;
+    width: 100%; max-width: 480px;
+    background: #0C0B09;
+    border-radius: 20px;
+    overflow: hidden;
+    border: 1px solid rgba(255,255,255,0.07);
+    box-shadow:
+      0 32px 80px -16px rgba(0,0,0,0.35),
+      0 0 0 1px rgba(255,255,255,0.04) inset;
+    animation: artifact-float 7s ease-in-out infinite;
+    will-change: transform;
+    transform-style: preserve-3d;
+    transition: box-shadow 0.3s ease;
+    cursor: default;
+  }
+  .artifact-card::before {
+    content: '';
+    position: absolute; inset: -1px;
+    border-radius: 21px;
+    background: var(--holo);
+    z-index: -1;
+    opacity: 0.25;
+  }
+  @keyframes artifact-float {
+    0%,100% { transform: translateY(0px); }
+    50%      { transform: translateY(-14px); }
+  }
+  .artifact-grid-bg {
+    position: absolute; inset: 0; pointer-events: none;
+    background-image:
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+  .artifact-shine {
+    position: absolute; inset: 0; pointer-events: none; z-index: 10;
+    background: radial-gradient(circle at 50% 30%, rgba(255,255,255,0.06) 0%, transparent 65%);
+    transition: background 0.08s linear;
+  }
+  .artifact-body { position: relative; z-index: 2; padding: 28px; }
+  .artifact-header {
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 28px;
+  }
+  .artifact-header .a-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
+  }
+  .artifact-live {
+    display: flex; align-items: center; gap: 5px;
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: #4ADE80;
+  }
+  .artifact-live-dot {
+    width: 5px; height: 5px; border-radius: 50%; background: #4ADE80;
+    animation: artifact-blink 1.4s step-end infinite;
+  }
+  @keyframes artifact-blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+  .artifact-title {
+    font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.9);
+    letter-spacing: -0.01em; margin-bottom: 6px;
+  }
+  .artifact-sub {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: rgba(255,255,255,0.25); letter-spacing: 0.04em;
+    text-transform: uppercase; margin-bottom: 28px;
+  }
+  .artifact-rows { display: flex; flex-direction: column; gap: 10px; }
+  .artifact-row {
+    display: flex; flex-direction: column; gap: 5px;
+  }
+  .artifact-row-top {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 12px;
+  }
+  .artifact-row-name { color: rgba(255,255,255,0.65); font-weight: 500; }
+  .artifact-row-status {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .artifact-row-status.done  { color: #4ADE80; }
+  .artifact-row-status.active{ color: rgba(255,255,255,0.4); }
+  .artifact-row-status.idle  { color: rgba(255,255,255,0.2); }
+  .artifact-bar {
+    height: 3px; background: rgba(255,255,255,0.06);
+    border-radius: 2px; overflow: hidden;
+  }
+  .artifact-bar-fill {
+    height: 100%; border-radius: 2px;
+    background: var(--holo);
+    transform-origin: left;
+    animation: bar-grow 1.4s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+  .artifact-bar-fill.animated {
+    animation: bar-pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes bar-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes bar-pulse {
+    0%,100%{ opacity: 1; } 50%{ opacity: 0.55; }
+  }
+  .artifact-footer {
+    margin-top: 28px; padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .artifact-footer .a-domain {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: rgba(255,255,255,0.35); letter-spacing: 0.02em;
+  }
+  .artifact-footer .a-day {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: rgba(255,255,255,0.2); letter-spacing: 0.05em; text-transform: uppercase;
+  }
+  .artifact-day-counter {
+    margin-top: 20px;
+    display: flex; gap: 6px;
+  }
+  .artifact-pip {
+    flex: 1; height: 3px; border-radius: 2px;
+    background: rgba(255,255,255,0.08);
+  }
+  .artifact-pip.done { background: var(--holo); }
+  .artifact-pip.active {
+    background: linear-gradient(90deg, #7c3aed, rgba(255,255,255,0.12));
+    animation: bar-pulse 1.8s ease-in-out infinite;
+  }
 
   .marquee {
     margin-top: 80px;
@@ -488,8 +618,7 @@
     .hero-grid { grid-template-columns: 1fr; gap: 48px; align-items: start; }
     .hero h1 { margin-top: 16px; }
     .hero-meta { gap: 28px; margin-top: 32px; }
-    .hero-side { border-left: none; padding-left: 0; }
-    .hero-side p { max-width: 100%; }
+    .artifact-wrap { margin-top: 8px; }
     .marquee { margin-top: 56px; }
 
     .section-head { grid-template-columns: 1fr; gap: 16px; margin-bottom: 40px; align-items: start; }
@@ -733,18 +862,84 @@
         <div class="available-badge"><span class="available-dot"></span>Available now</div>
         <div class="mono">A small, focused studio · London, UK</div>
         <h1>We ship the <span class="it">first</span> version of your startup.</h1>
-        <div class="hero-meta">
-          <div class="stat"><div class="num">7 days</div><div class="lbl">Typical turnaround</div></div>
-          <div class="stat"><div class="num">From $1k</div><div class="lbl">Fixed fee · no hourly</div></div>
-          <div class="stat"><div class="num">100%</div><div class="lbl">Transparent process</div></div>
-        </div>
-      </div>
-      <div class="hero-side">
-        <div class="mono">How it works</div>
-        <p>We're a small, focused studio based in London. We pair our favourite AI tools with opinionated execution to take you from a Notion doc to a live product, usually inside a week. No standups, no Slack pile-ons — just fast, focused execution.</p>
+        <p class="hero-left-desc">From a Notion doc to a live product in under a week. Design, build, and deploy — all in one sprint.</p>
         <div class="hero-actions">
           <a class="btn" href="#book">Book a discovery call <span class="arr">→</span></a>
           <a class="btn ghost" href="#work">See work</a>
+        </div>
+        <div class="hero-meta">
+          <div class="stat"><div class="num">7 days</div><div class="lbl">Typical turnaround</div></div>
+          <div class="stat"><div class="num">From £2.5k</div><div class="lbl">Fixed fee · no hourly</div></div>
+          <div class="stat"><div class="num">10+</div><div class="lbl">MVPs shipped</div></div>
+        </div>
+      </div>
+
+      <!-- ── Artifact card ── -->
+      <div class="artifact-wrap" data-reveal data-delay="2">
+        <div class="artifact-card" id="artifact-card">
+          <div class="artifact-grid-bg"></div>
+          <div class="artifact-shine" id="artifact-shine"></div>
+          <div class="artifact-body">
+            <div class="artifact-header">
+              <span class="a-label">Sprint 01 — week build</span>
+              <span class="artifact-live"><span class="artifact-live-dot"></span>Active</span>
+            </div>
+            <div class="artifact-title">your-startup.com</div>
+            <div class="artifact-sub">Day 4 of 7 · 3 days remaining</div>
+
+            <div class="artifact-rows">
+              <div class="artifact-row">
+                <div class="artifact-row-top">
+                  <span class="artifact-row-name">Discovery &amp; scope</span>
+                  <span class="artifact-row-status done">Done</span>
+                </div>
+                <div class="artifact-bar"><div class="artifact-bar-fill" style="width:100%;animation-delay:0s"></div></div>
+              </div>
+              <div class="artifact-row">
+                <div class="artifact-row-top">
+                  <span class="artifact-row-name">Design system</span>
+                  <span class="artifact-row-status done">Done</span>
+                </div>
+                <div class="artifact-bar"><div class="artifact-bar-fill" style="width:100%;animation-delay:0.15s"></div></div>
+              </div>
+              <div class="artifact-row">
+                <div class="artifact-row-top">
+                  <span class="artifact-row-name">Core build</span>
+                  <span class="artifact-row-status active">72%</span>
+                </div>
+                <div class="artifact-bar"><div class="artifact-bar-fill animated" style="width:72%;animation-delay:0.3s"></div></div>
+              </div>
+              <div class="artifact-row">
+                <div class="artifact-row-top">
+                  <span class="artifact-row-name">QA &amp; polish</span>
+                  <span class="artifact-row-status idle">—</span>
+                </div>
+                <div class="artifact-bar"><div class="artifact-bar-fill" style="width:0%;"></div></div>
+              </div>
+              <div class="artifact-row">
+                <div class="artifact-row-top">
+                  <span class="artifact-row-name">Deploy &amp; handoff</span>
+                  <span class="artifact-row-status idle">—</span>
+                </div>
+                <div class="artifact-bar"><div class="artifact-bar-fill" style="width:0%;"></div></div>
+              </div>
+            </div>
+
+            <div class="artifact-day-counter">
+              <div class="artifact-pip done"></div>
+              <div class="artifact-pip done"></div>
+              <div class="artifact-pip done"></div>
+              <div class="artifact-pip active"></div>
+              <div class="artifact-pip"></div>
+              <div class="artifact-pip"></div>
+              <div class="artifact-pip"></div>
+            </div>
+
+            <div class="artifact-footer">
+              <span class="a-domain">tinystartupstudio.com</span>
+              <span class="a-day">London, UK</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>
@@ -1602,6 +1797,46 @@
       orb.style.transform = `translate(calc(${cx}px - 50%), calc(${cy}px - 50%))`;
       requestAnimationFrame(tick);
     })();
+  })();
+
+  // ── ARTIFACT CARD TILT ───────────────────────────────────────────────────
+  (function () {
+    const card  = document.getElementById('artifact-card');
+    const shine = document.getElementById('artifact-shine');
+    if (!card || !window.matchMedia('(pointer:fine)').matches) return;
+
+    const wrap = card.parentElement;
+    let animFrame;
+    let targetRX = 0, targetRY = 0, currentRX = 0, currentRY = 0;
+    let isHovered = false;
+
+    wrap.addEventListener('mouseenter', () => { isHovered = true; });
+    wrap.addEventListener('mouseleave', () => {
+      isHovered = false;
+      targetRX = 0; targetRY = 0;
+      shine.style.background = 'radial-gradient(circle at 50% 30%, rgba(255,255,255,0.055) 0%, transparent 65%)';
+    });
+
+    wrap.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top)  / rect.height;
+      targetRX = (y - 0.5) * -18;
+      targetRY = (x - 0.5) *  22;
+      shine.style.background = `radial-gradient(circle at ${x*100}% ${y*100}%, rgba(255,255,255,0.09) 0%, transparent 60%)`;
+    });
+
+    function tick() {
+      currentRX += (targetRX - currentRX) * 0.1;
+      currentRY += (targetRY - currentRY) * 0.1;
+      if (isHovered || Math.abs(currentRX) > 0.05 || Math.abs(currentRY) > 0.05) {
+        card.style.transform = `rotateX(${currentRX}deg) rotateY(${currentRY}deg)`;
+      } else {
+        card.style.transform = '';
+      }
+      animFrame = requestAnimationFrame(tick);
+    }
+    tick();
   })();
 
   // ── SCROLL REVEALS ────────────────────────────────────────────────────────
