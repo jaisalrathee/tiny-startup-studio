@@ -1,0 +1,783 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <title>MVP in 7 Days · Tiny Startup Studio</title>
+  <meta name="description" content="We turn ambitious ideas into working products in under 7 days. Full-stack design and development for founders who want to move fast without cutting corners." />
+  <link rel="canonical" href="https://www.tinystartupstudio.com/mvp" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    :root {
+      --bg:          #F4F1EA;
+      --bg-2:        #EDE9DF;
+      --ink:         #15140F;
+      --ink-2:       #2A2823;
+      --ink-3:       #6B675D;
+      --ink-4:       #9B968A;
+      --rule:        #1514101A;
+      --rule-strong: #15141033;
+      --accent:      oklch(0.68 0.13 55);
+      --accent-ink:  oklch(0.32 0.08 55);
+      --paper:       #FBF9F3;
+      --card:        #FFFFFF;
+      --gutter:      32px;
+    }
+
+    html { scroll-behavior: smooth; }
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: 'Inter Tight', system-ui, sans-serif;
+      font-size: 16px;
+      line-height: 1.5;
+      -webkit-font-smoothing: antialiased;
+      -moz-osx-font-smoothing: grayscale;
+      overflow-x: hidden;
+    }
+    ::selection { background: var(--ink); color: var(--bg); }
+
+    /* ── Utilities ── */
+    .mono {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; letter-spacing: 0.06em;
+      text-transform: uppercase; color: var(--ink-3); font-weight: 500;
+    }
+    .it { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; }
+    .container { max-width: 1200px; margin: 0 auto; padding: 0 var(--gutter); }
+    .rule { height: 1px; background: var(--rule); width: 100%; }
+
+    /* ── Nav ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      padding: 0 var(--gutter);
+      height: 60px;
+      display: flex; align-items: center; justify-content: space-between;
+      background: color-mix(in oklab, var(--bg) 85%, transparent);
+      backdrop-filter: blur(16px); -webkit-backdrop-filter: blur(16px);
+      border-bottom: 1px solid var(--rule);
+    }
+    .brand {
+      display: flex; align-items: center; gap: 10px;
+      font-weight: 600; letter-spacing: -0.01em;
+      text-decoration: none; color: var(--ink); font-size: 15px;
+    }
+    .brand .dot {
+      width: 10px; height: 10px; background: var(--ink);
+      border-radius: 2px; flex: none;
+    }
+    .nav-right { display: flex; align-items: center; gap: 24px; }
+    .nav-right a { color: var(--ink-3); text-decoration: none; font-size: 14px; transition: color 0.15s; }
+    .nav-right a:hover { color: var(--ink); }
+    .btn {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 0 20px; height: 38px; border-radius: 999px;
+      font: inherit; font-size: 14px; font-weight: 500; letter-spacing: -0.01em;
+      text-decoration: none; cursor: pointer; transition: all 0.18s ease;
+      border: 1px solid var(--ink); background: var(--ink); color: var(--bg);
+    }
+    .btn:hover { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+    .btn.ghost { background: transparent; color: var(--ink); }
+    .btn.ghost:hover { background: var(--ink); color: var(--bg); }
+    .arr { font-size: 16px; line-height: 1; }
+
+    /* ── HERO ── */
+    .hero {
+      padding: 120px var(--gutter) 100px;
+      max-width: 1200px; margin: 0 auto;
+      display: grid; grid-template-columns: 1fr 1fr; gap: 80px; align-items: center;
+    }
+    .hero-badge {
+      display: inline-flex; align-items: center; gap: 8px;
+      padding: 5px 12px 5px 6px; border-radius: 999px;
+      border: 1px solid var(--rule-strong);
+      font-size: 12px; font-weight: 500; color: var(--ink-2);
+      margin-bottom: 28px; background: var(--paper);
+    }
+    .hero-badge .pip {
+      width: 18px; height: 18px; border-radius: 50%;
+      background: var(--ink); display: grid; place-items: center; flex: none;
+    }
+    .hero-badge .pip svg { display: block; }
+    .hero h1 {
+      font-size: clamp(48px, 6vw, 76px);
+      line-height: 0.95; letter-spacing: -0.04em;
+      font-weight: 500; margin-bottom: 28px;
+    }
+    .hero h1 .it { color: var(--accent-ink); }
+    .hero p {
+      font-size: 18px; color: var(--ink-3); line-height: 1.6;
+      max-width: 440px; margin-bottom: 40px;
+    }
+    .hero-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+    .hero-trust {
+      margin-top: 56px; padding-top: 28px;
+      border-top: 1px solid var(--rule);
+      display: flex; gap: 32px;
+    }
+    .hero-stat .num {
+      font-size: 28px; font-weight: 500; letter-spacing: -0.03em; line-height: 1;
+    }
+    .hero-stat .lbl {
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 10px; text-transform: uppercase;
+      color: var(--ink-3); letter-spacing: 0.06em; margin-top: 4px;
+    }
+
+    /* Hero right — animated ticker card */
+    .hero-visual {
+      background: var(--paper); border: 1px solid var(--rule-strong);
+      border-radius: 20px; padding: 0; overflow: hidden;
+      box-shadow: 0 4px 32px -8px rgba(0,0,0,0.08);
+    }
+    .hv-top {
+      padding: 20px 24px; border-bottom: 1px solid var(--rule);
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .hv-dots { display: flex; gap: 6px; }
+    .hv-dots span { width: 10px; height: 10px; border-radius: 50%; background: var(--rule-strong); }
+    .hv-dots span:first-child { background: #FF5F57; }
+    .hv-dots span:nth-child(2) { background: #FFBD2E; }
+    .hv-dots span:last-child { background: #28C840; }
+    .hv-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; color: var(--ink-4); }
+    .hv-body { padding: 24px; display: flex; flex-direction: column; gap: 12px; }
+    .hv-row {
+      display: flex; align-items: center; justify-content: space-between;
+      padding: 14px 16px; border-radius: 12px;
+      background: var(--card); border: 1px solid var(--rule);
+      font-size: 14px; font-weight: 500;
+      opacity: 0; transform: translateY(8px);
+      animation: rowIn 0.4s ease forwards;
+    }
+    .hv-row:nth-child(1) { animation-delay: 0.1s; }
+    .hv-row:nth-child(2) { animation-delay: 0.3s; }
+    .hv-row:nth-child(3) { animation-delay: 0.5s; }
+    .hv-row:nth-child(4) { animation-delay: 0.7s; }
+    .hv-row:nth-child(5) { animation-delay: 0.9s; }
+    @keyframes rowIn {
+      to { opacity: 1; transform: none; }
+    }
+    .hv-row .day-tag {
+      font-family: 'JetBrains Mono', monospace; font-size: 10px;
+      color: var(--ink-4); letter-spacing: 0.04em;
+    }
+    .hv-row .check {
+      width: 22px; height: 22px; border-radius: 50%;
+      border: 1.5px solid var(--rule-strong);
+      display: grid; place-items: center; color: var(--ink-3); flex: none;
+    }
+    .hv-row.done .check { background: var(--ink); border-color: var(--ink); color: var(--bg); }
+    .hv-row.active { border-color: var(--accent); }
+    .hv-row.active .check { border-color: var(--accent); color: var(--accent-ink); animation: pulse 1.5s ease-in-out infinite; }
+    @keyframes pulse { 0%,100%{ box-shadow:0 0 0 0 oklch(0.68 0.13 55 / 0.3); } 50%{ box-shadow:0 0 0 6px oklch(0.68 0.13 55 / 0); } }
+    .hv-footer {
+      margin: 8px 0 0; padding: 16px 24px;
+      background: var(--ink); border-radius: 0 0 20px 20px;
+      display: flex; align-items: center; justify-content: space-between;
+    }
+    .hv-footer .label { font-size: 13px; font-weight: 500; color: var(--bg); }
+    .hv-footer .sub { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: rgba(255,255,255,0.4); margin-top: 2px; }
+    .hv-footer .live { display: flex; align-items: center; gap: 6px; font-size: 12px; font-weight: 500; color: #4ADE80; }
+    .hv-footer .live-dot { width: 6px; height: 6px; border-radius: 50%; background: #4ADE80; animation: blink 1.4s step-end infinite; }
+    @keyframes blink { 0%,100%{opacity:1} 50%{opacity:0.3} }
+
+    /* ── SECTION base ── */
+    section { padding: 100px 0; }
+    section + section { padding-top: 0; }
+
+    /* ── WHAT WE BUILD ── */
+    .what { background: var(--paper); padding: 100px 0; }
+    .what h2 { font-size: clamp(32px, 4vw, 48px); font-weight: 500; letter-spacing: -0.03em; line-height: 1.05; margin: 16px 0 8px; }
+    .what > .container > p { font-size: 17px; color: var(--ink-3); line-height: 1.6; max-width: 560px; margin: 0 0 60px; }
+    .build-grid {
+      display: grid; grid-template-columns: repeat(3, 1fr); gap: 2px;
+      border: 1px solid var(--rule-strong); border-radius: 20px; overflow: hidden;
+    }
+    .build-card {
+      background: var(--card); padding: 36px 32px;
+      display: flex; flex-direction: column; gap: 16px;
+      transition: background 0.2s ease;
+    }
+    .build-card:hover { background: var(--bg-2); }
+    .build-icon {
+      width: 44px; height: 44px; border-radius: 12px;
+      border: 1px solid var(--rule-strong);
+      display: grid; place-items: center; color: var(--ink-2);
+      background: var(--paper);
+    }
+    .build-card h3 { font-size: 17px; font-weight: 500; letter-spacing: -0.02em; }
+    .build-card p { font-size: 14px; color: var(--ink-3); line-height: 1.55; }
+    .build-card .tag-row { display: flex; gap: 6px; flex-wrap: wrap; margin-top: auto; }
+    .pill {
+      display: inline-block; padding: 3px 10px; border-radius: 999px;
+      font-family: 'JetBrains Mono', monospace; font-size: 10px; letter-spacing: 0.04em;
+      border: 1px solid var(--rule-strong); color: var(--ink-3); text-transform: uppercase;
+    }
+
+    /* ── JOURNEY (how we work) ── */
+    .journey { padding: 100px 0; }
+    .journey h2 { font-size: clamp(32px, 4vw, 48px); font-weight: 500; letter-spacing: -0.03em; margin: 16px 0 56px; line-height: 1.05; max-width: 640px; }
+    .steps { display: flex; flex-direction: column; gap: 0; border: 1px solid var(--rule-strong); border-radius: 20px; overflow: hidden; }
+    .step {
+      display: grid; grid-template-columns: 56px 1fr auto;
+      gap: 0; padding: 0; border-bottom: 1px solid var(--rule);
+      background: var(--paper); transition: background 0.2s;
+      cursor: default;
+    }
+    .step:last-child { border-bottom: none; }
+    .step:hover { background: var(--card); }
+    .step-num {
+      padding: 32px 0 32px 32px;
+      font-family: 'JetBrains Mono', monospace;
+      font-size: 11px; color: var(--ink-4); letter-spacing: 0.06em;
+      display: flex; align-items: flex-start; padding-top: 36px;
+    }
+    .step-body { padding: 32px 32px 32px 20px; }
+    .step-body h3 { font-size: 20px; font-weight: 500; letter-spacing: -0.02em; margin-bottom: 8px; }
+    .step-body p { font-size: 15px; color: var(--ink-3); line-height: 1.6; max-width: 560px; }
+    .step-day {
+      padding: 32px 32px 32px 0;
+      display: flex; align-items: flex-start; padding-top: 36px;
+      font-family: 'JetBrains Mono', monospace; font-size: 11px;
+      color: var(--ink-4); letter-spacing: 0.06em; white-space: nowrap;
+    }
+
+    /* ── WHO WE WORK WITH ── */
+    .who { background: var(--paper); padding: 100px 0; }
+    .who h2 { font-size: clamp(32px, 4vw, 48px); font-weight: 500; letter-spacing: -0.03em; margin: 16px 0 48px; }
+    .who-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 2px; border: 1px solid var(--rule-strong); border-radius: 20px; overflow: hidden; }
+    .who-card { background: var(--card); padding: 48px 44px; }
+    .who-card .icon {
+      width: 48px; height: 48px; border-radius: 14px;
+      border: 1px solid var(--rule-strong); background: var(--paper);
+      display: grid; place-items: center; margin-bottom: 24px;
+    }
+    .who-card h3 { font-size: 20px; font-weight: 500; letter-spacing: -0.02em; margin-bottom: 12px; }
+    .who-card p { font-size: 15px; color: var(--ink-3); line-height: 1.65; }
+    .who-card ul { margin-top: 20px; display: flex; flex-direction: column; gap: 8px; }
+    .who-card li {
+      display: flex; align-items: center; gap: 10px;
+      font-size: 14px; color: var(--ink-2); list-style: none;
+    }
+    .who-card li::before {
+      content: ''; width: 5px; height: 5px; border-radius: 50%;
+      background: var(--accent); flex: none;
+    }
+
+    /* ── PRICING ── */
+    .pricing-section { padding: 100px 0; }
+    .pricing-section h2 { font-size: clamp(32px, 4vw, 48px); font-weight: 500; letter-spacing: -0.03em; margin: 16px 0 8px; }
+    .pricing-section > .container > p { font-size: 17px; color: var(--ink-3); margin: 0 0 56px; }
+    .pricing-cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .p-card {
+      background: var(--paper); border: 1px solid var(--rule-strong);
+      border-radius: 20px; padding: 40px 36px;
+      display: flex; flex-direction: column; gap: 28px;
+    }
+    .p-card.featured { background: var(--ink); border-color: var(--ink); }
+    .p-card.featured * { color: rgba(255,255,255,0.9) !important; }
+    .p-card.featured .pill { border-color: rgba(255,255,255,0.2); }
+    .p-card.featured .p-divider { background: rgba(255,255,255,0.1); }
+    .p-card.featured .btn { background: var(--bg); color: var(--ink); border-color: var(--bg); }
+    .p-card.featured .btn:hover { background: var(--accent); border-color: var(--accent); color: var(--bg); }
+    .p-top { display: flex; flex-direction: column; gap: 6px; }
+    .p-top .p-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+    .p-top h3 { font-size: 20px; font-weight: 500; letter-spacing: -0.02em; }
+    .p-top .p-desc { font-size: 14px; color: var(--ink-3); line-height: 1.5; }
+    .p-price { display: flex; align-items: baseline; gap: 6px; }
+    .p-price .from { font-size: 13px; color: var(--ink-3); }
+    .p-price .amount { font-size: 44px; font-weight: 500; letter-spacing: -0.04em; line-height: 1; }
+    .p-divider { height: 1px; background: var(--rule); }
+    .p-features { display: flex; flex-direction: column; gap: 10px; }
+    .p-feat { display: flex; align-items: flex-start; gap: 10px; font-size: 14px; }
+    .p-feat svg { flex: none; margin-top: 2px; }
+    .p-card.featured .p-feat svg { opacity: 0.7; }
+
+    /* ── CTA BAND ── */
+    .cta-band {
+      background: var(--ink); padding: 100px var(--gutter);
+      text-align: center;
+    }
+    .cta-band .mono { color: rgba(255,255,255,0.35); margin-bottom: 20px; }
+    .cta-band h2 {
+      font-size: clamp(36px, 5vw, 64px); font-weight: 500;
+      letter-spacing: -0.04em; line-height: 1; color: var(--bg);
+      margin-bottom: 16px;
+    }
+    .cta-band h2 .it { color: oklch(0.78 0.12 55); }
+    .cta-band p { font-size: 17px; color: rgba(255,255,255,0.45); margin-bottom: 40px; }
+    .cta-band .btn { background: var(--bg); color: var(--ink); border-color: var(--bg); font-size: 16px; height: 52px; padding: 0 32px; }
+    .cta-band .btn:hover { background: oklch(0.78 0.12 55); border-color: oklch(0.78 0.12 55); }
+    .cta-band .sub-note { margin-top: 20px; font-size: 13px; color: rgba(255,255,255,0.25); }
+
+    /* ── FOOTER ── */
+    footer {
+      padding: 40px var(--gutter);
+      display: flex; align-items: center; justify-content: space-between;
+      border-top: 1px solid var(--rule); gap: 16px; flex-wrap: wrap;
+    }
+    footer .left { font-size: 13px; color: var(--ink-3); }
+    footer .links { display: flex; gap: 20px; }
+    footer .links a { font-size: 13px; color: var(--ink-3); text-decoration: none; transition: color 0.15s; }
+    footer .links a:hover { color: var(--ink); }
+
+    /* ── SCROLL REVEALS ── */
+    [data-reveal] { opacity: 0; transform: translateY(20px); transition: opacity 0.55s ease, transform 0.55s ease; }
+    [data-reveal].revealed { opacity: 1; transform: none; }
+    [data-reveal][data-delay="1"] { transition-delay: 0.1s; }
+    [data-reveal][data-delay="2"] { transition-delay: 0.2s; }
+    [data-reveal][data-delay="3"] { transition-delay: 0.3s; }
+    [data-reveal][data-delay="4"] { transition-delay: 0.4s; }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 900px) {
+      .hero { grid-template-columns: 1fr; gap: 48px; padding: 80px var(--gutter) 64px; }
+      .hero-visual { max-width: 480px; }
+      .build-grid { grid-template-columns: 1fr 1fr; }
+      .who-grid { grid-template-columns: 1fr; }
+      .pricing-cards { grid-template-columns: 1fr; }
+      .step { grid-template-columns: 48px 1fr; }
+      .step-day { display: none; }
+    }
+    @media (max-width: 600px) {
+      :root { --gutter: 20px; }
+      .build-grid { grid-template-columns: 1fr; }
+      nav .nav-right a:not(.btn) { display: none; }
+      .hero h1 { font-size: 42px; }
+      .hero-trust { gap: 20px; flex-wrap: wrap; }
+      .step { grid-template-columns: 40px 1fr; }
+      .step-num { padding: 24px 0 24px 20px; }
+      .step-body { padding: 24px 20px; }
+      .p-card { padding: 28px 24px; }
+      .who-card { padding: 36px 28px; }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── NAV ── -->
+  <nav>
+    <a class="brand" href="/">
+      <span class="dot"></span>
+      Tiny Startup Studio
+    </a>
+    <div class="nav-right">
+      <a href="/#work">Work</a>
+      <a href="/#process">Process</a>
+      <a href="/#pricing">Pricing</a>
+      <a class="btn" href="/#book">Book a call <span class="arr">→</span></a>
+    </div>
+  </nav>
+
+  <!-- ── HERO ── -->
+  <div class="hero">
+    <div class="hero-left">
+      <div class="hero-badge">
+        <span class="pip">
+          <svg width="10" height="10" viewBox="0 0 10 10" fill="none">
+            <path d="M5 1v4l2.5 1.5" stroke="white" stroke-width="1.4" stroke-linecap="round"/>
+          </svg>
+        </span>
+        Idea to MVP · Under 7 days
+      </div>
+      <h1>We build your <span class="it">MVP</span><br>while you sleep.</h1>
+      <p>Full-stack design and development for founders who need to move fast. One team, one week, a working product.</p>
+      <div class="hero-actions">
+        <a class="btn" href="/#book">Start your MVP <span class="arr">→</span></a>
+        <a class="btn ghost" href="/#work">See past work</a>
+      </div>
+      <div class="hero-trust">
+        <div class="hero-stat">
+          <div class="num">7</div>
+          <div class="lbl">Day delivery</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num">£5k</div>
+          <div class="lbl">Starting price</div>
+        </div>
+        <div class="hero-stat">
+          <div class="num">10+</div>
+          <div class="lbl">MVPs shipped</div>
+        </div>
+      </div>
+    </div>
+
+    <div class="hero-visual">
+      <div class="hv-top">
+        <div class="hv-dots"><span></span><span></span><span></span></div>
+        <span class="hv-label">build-log · week-01</span>
+      </div>
+      <div class="hv-body">
+        <div class="hv-row done">
+          <span>Discovery &amp; scope</span>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="day-tag">Day 1</span>
+            <span class="check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+        <div class="hv-row done">
+          <span>Design &amp; wireframes</span>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="day-tag">Day 2</span>
+            <span class="check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><path d="M1 4l3 3 5-6" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></span>
+          </div>
+        </div>
+        <div class="hv-row active">
+          <span>Core build</span>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="day-tag">Days 3–5</span>
+            <span class="check"><svg width="10" height="8" viewBox="0 0 10 8" fill="none"><circle cx="5" cy="4" r="2" fill="currentColor"/></svg></span>
+          </div>
+        </div>
+        <div class="hv-row">
+          <span>QA &amp; polish</span>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="day-tag">Day 6</span>
+            <span class="check"></span>
+          </div>
+        </div>
+        <div class="hv-row">
+          <span>Deploy &amp; handoff</span>
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span class="day-tag">Day 7</span>
+            <span class="check"></span>
+          </div>
+        </div>
+      </div>
+      <div class="hv-footer">
+        <div>
+          <div class="label">your-mvp.app</div>
+          <div class="sub">Deploying to production…</div>
+        </div>
+        <div class="live"><span class="live-dot"></span>Live in 7 days</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── WHAT WE BUILD ── -->
+  <section class="what" data-reveal>
+    <div class="container">
+      <div class="mono">What we build</div>
+      <h2>From AI products to<br><span class="it">SaaS and everything between.</span></h2>
+      <p>You can work with us on the full journey or just one piece of it. We cover strategy, design, and engineering under one roof.</p>
+      <div class="build-grid">
+
+        <div class="build-card" data-reveal data-delay="1">
+          <div class="build-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M10 2L3 6v8l7 4 7-4V6L10 2z"/><path d="M10 2v12M3 6l7 4 7-4"/>
+            </svg>
+          </div>
+          <h3>AI-powered products</h3>
+          <p>LLM integrations, AI workflows, chatbots, and intelligent features built into your product from day one.</p>
+          <div class="tag-row">
+            <span class="pill">OpenAI</span>
+            <span class="pill">Claude</span>
+            <span class="pill">RAG</span>
+          </div>
+        </div>
+
+        <div class="build-card" data-reveal data-delay="2">
+          <div class="build-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="4" width="16" height="12" rx="2"/>
+              <path d="M6 8h8M6 12h5"/>
+            </svg>
+          </div>
+          <h3>SaaS products</h3>
+          <p>Subscription apps with auth, billing, dashboards, and everything needed to take your first paying customers.</p>
+          <div class="tag-row">
+            <span class="pill">Next.js</span>
+            <span class="pill">Stripe</span>
+            <span class="pill">Supabase</span>
+          </div>
+        </div>
+
+        <div class="build-card" data-reveal data-delay="3">
+          <div class="build-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="6" y="1" width="8" height="18" rx="2"/>
+              <path d="M9 16h2"/>
+            </svg>
+          </div>
+          <h3>Mobile apps</h3>
+          <p>iOS and Android from a single codebase. Fast, native-feeling, and ready for the App Store within your launch window.</p>
+          <div class="tag-row">
+            <span class="pill">React Native</span>
+            <span class="pill">Expo</span>
+          </div>
+        </div>
+
+        <div class="build-card" data-reveal data-delay="1">
+          <div class="build-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M2 10s3-6 8-6 8 6 8 6-3 6-8 6-8-6-8-6z"/><circle cx="10" cy="10" r="2.5"/>
+            </svg>
+          </div>
+          <h3>Product websites</h3>
+          <p>High-converting landing pages that validate demand and capture leads before you write a single line of app code.</p>
+          <div class="tag-row">
+            <span class="pill">Design</span>
+            <span class="pill">CRO</span>
+            <span class="pill">Fast</span>
+          </div>
+        </div>
+
+        <div class="build-card" data-reveal data-delay="2">
+          <div class="build-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+              <path d="M4 4h5v5H4zM11 4h5v5h-5zM4 11h5v5H4zM14 13.5a1.5 1.5 0 100 3 1.5 1.5 0 000-3z"/>
+              <path d="M14 11v2.5M11 15h2.5"/>
+            </svg>
+          </div>
+          <h3>Marketplaces &amp; platforms</h3>
+          <p>Two-sided platforms, directories, and community products that connect people and grow with network effects.</p>
+          <div class="tag-row">
+            <span class="pill">Auth</span>
+            <span class="pill">Payments</span>
+            <span class="pill">Search</span>
+          </div>
+        </div>
+
+        <div class="build-card" data-reveal data-delay="3">
+          <div class="build-icon">
+            <svg width="20" height="20" viewBox="0 0 20 20" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="10" cy="10" r="8"/><path d="M10 6v4l3 2"/>
+            </svg>
+          </div>
+          <h3>API integrations</h3>
+          <p>Third-party data, webhooks, automation pipelines. We hook your product into the tools your users already live in.</p>
+          <div class="tag-row">
+            <span class="pill">REST</span>
+            <span class="pill">Webhooks</span>
+            <span class="pill">OAuth</span>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PROCESS ── -->
+  <section class="journey" data-reveal>
+    <div class="container">
+      <div class="mono">Our process</div>
+      <h2>We don't follow a template.<br><span class="it">Our process adapts.</span></h2>
+
+      <div class="steps">
+        <div class="step" data-reveal data-delay="1">
+          <div class="step-num">01</div>
+          <div class="step-body">
+            <h3>Explore</h3>
+            <p>We start with clarity — your goals, your users, their problems, the edge cases. We ask better questions and kill bad ideas early, so the right ones survive.</p>
+          </div>
+          <div class="step-day">Day 1</div>
+        </div>
+        <div class="step" data-reveal data-delay="2">
+          <div class="step-num">02</div>
+          <div class="step-body">
+            <h3>Design</h3>
+            <p>Fast, but intentional. From wireframes to high-fidelity UI in hours, not weeks. We keep the experience sharp — because first impressions determine everything.</p>
+          </div>
+          <div class="step-day">Day 2</div>
+        </div>
+        <div class="step" data-reveal data-delay="3">
+          <div class="step-num">03</div>
+          <div class="step-body">
+            <h3>Build</h3>
+            <p>Frontend, backend, AI integrations, native apps — whatever it takes. Clean, scalable code shipped with constant demos. You're in the loop the entire way.</p>
+          </div>
+          <div class="step-day">Days 3–5</div>
+        </div>
+        <div class="step" data-reveal data-delay="4">
+          <div class="step-num">04</div>
+          <div class="step-body">
+            <h3>Deliver &amp; iterate</h3>
+            <p>Launch is a checkpoint, not the end. We deploy, hand off everything, and stay available as you grow. One week to ship — then we keep going as long as you need.</p>
+          </div>
+          <div class="step-day">Days 6–7</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── WHO WE WORK WITH ── -->
+  <section class="who" data-reveal>
+    <div class="container">
+      <div class="mono">Who we work with</div>
+      <h2>Built for founders<br>who <span class="it">move fast.</span></h2>
+      <div class="who-grid">
+        <div class="who-card" data-reveal data-delay="1">
+          <div class="icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5">
+              <circle cx="11" cy="7" r="4"/><path d="M3 19c0-4.4 3.6-8 8-8s8 3.6 8 8"/>
+            </svg>
+          </div>
+          <h3>Startup founders</h3>
+          <p>Whether you're pre-seed, bootstrapped, or raising your first round — we help you get to a working product fast enough to validate, demo, and fundraise.</p>
+          <ul>
+            <li>Pre-seed &amp; early-stage</li>
+            <li>Bootstrapped founders</li>
+            <li>First-time entrepreneurs</li>
+            <li>Solo founders with an idea</li>
+          </ul>
+        </div>
+        <div class="who-card" data-reveal data-delay="2">
+          <div class="icon">
+            <svg width="22" height="22" viewBox="0 0 22 22" fill="none" stroke="currentColor" stroke-width="1.5">
+              <rect x="2" y="6" width="18" height="14" rx="2"/>
+              <path d="M7 6V4a4 4 0 018 0v2"/>
+            </svg>
+          </div>
+          <h3>Established companies</h3>
+          <p>Domain experts and consulting firms who want to productise their knowledge into scalable SaaS or AI tools — without building an in-house engineering team.</p>
+          <ul>
+            <li>Corporate innovation teams</li>
+            <li>Consulting firms</li>
+            <li>Operators going solo</li>
+            <li>Companies adding AI features</li>
+          </ul>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── PRICING ── -->
+  <section class="pricing-section" data-reveal>
+    <div class="container">
+      <div class="mono">Pricing</div>
+      <h2>Simple, fixed-price <span class="it">engagements.</span></h2>
+      <p>No hourly billing. No scope creep surprises. A clear price for a clear outcome.</p>
+      <div class="pricing-cards">
+
+        <div class="p-card featured" data-reveal data-delay="1">
+          <div class="p-top">
+            <div class="p-label">Most popular</div>
+            <h3>MVP Build</h3>
+            <div class="p-desc">From discovery call to a live, working product — in one week.</div>
+          </div>
+          <div class="p-price">
+            <span class="from">Starting at</span>
+            <span class="amount">£5k</span>
+          </div>
+          <a class="btn" href="/#book">Book a discovery call <span class="arr">→</span></a>
+          <div class="p-divider"></div>
+          <div class="p-features">
+            <div class="p-feat">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8l4 4 8-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Delivered in 7 days
+            </div>
+            <div class="p-feat">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8l4 4 8-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Full UX &amp; UI design included
+            </div>
+            <div class="p-feat">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8l4 4 8-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Frontend + backend development
+            </div>
+            <div class="p-feat">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8l4 4 8-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Deployed &amp; production-ready
+            </div>
+            <div class="p-feat">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8l4 4 8-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Full code &amp; IP handoff
+            </div>
+            <div class="p-feat">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8l4 4 8-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              30-day post-launch support
+            </div>
+          </div>
+        </div>
+
+        <div class="p-card" data-reveal data-delay="2">
+          <div class="p-top">
+            <div class="p-label">Validate first</div>
+            <h3>Landing Page</h3>
+            <div class="p-desc">Test demand and collect leads before building your full product.</div>
+          </div>
+          <div class="p-price">
+            <span class="from">Starting at</span>
+            <span class="amount">£1.5k</span>
+          </div>
+          <a class="btn ghost" href="/#book">Book a discovery call <span class="arr">→</span></a>
+          <div class="p-divider"></div>
+          <div class="p-features">
+            <div class="p-feat">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8l4 4 8-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Delivered in 3–4 days
+            </div>
+            <div class="p-feat">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8l4 4 8-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Full design &amp; copy
+            </div>
+            <div class="p-feat">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8l4 4 8-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Email capture + waitlist
+            </div>
+            <div class="p-feat">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8l4 4 8-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Mobile-responsive
+            </div>
+            <div class="p-feat">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8l4 4 8-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Analytics set up
+            </div>
+            <div class="p-feat">
+              <svg width="16" height="16" viewBox="0 0 16 16" fill="none"><path d="M2 8l4 4 8-8" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>
+              Apply toward an MVP build
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+  </section>
+
+  <!-- ── CTA BAND ── -->
+  <div class="cta-band" data-reveal>
+    <div class="mono">Ready to build?</div>
+    <h2>Your idea deserves to<br>exist in the <span class="it">real world.</span></h2>
+    <p>30-minute discovery call. No pitch deck needed. Just tell us what you're building.</p>
+    <a class="btn" href="/#book">Book a free call <span class="arr">→</span></a>
+    <div class="sub-note">Free · no obligation · one-pager scope &amp; quote afterwards</div>
+  </div>
+
+  <!-- ── FOOTER ── -->
+  <footer>
+    <div class="left">© 2026 Tiny Startup Studio · London, UK</div>
+    <div class="links">
+      <a href="/">Home</a>
+      <a href="/#work">Work</a>
+      <a href="/#book">Book a call</a>
+      <a href="mailto:jr@tinystartups.com">jr@tinystartups.com</a>
+    </div>
+  </footer>
+
+  <script>
+    // Scroll reveals
+    function instantReveal(el) {
+      el.style.transition = 'none';
+      void el.offsetHeight;
+      el.classList.add('revealed');
+      requestAnimationFrame(() => requestAnimationFrame(() => { el.style.transition = ''; }));
+    }
+    document.querySelectorAll('[data-reveal]').forEach(el => {
+      const r = el.getBoundingClientRect();
+      if (r.top < window.innerHeight && r.bottom > 0) instantReveal(el);
+    });
+    const obs = new IntersectionObserver((entries) => {
+      entries.forEach(e => {
+        if (e.isIntersecting) { e.target.classList.add('revealed'); obs.unobserve(e.target); }
+      });
+    }, { threshold: 0.06 });
+    document.querySelectorAll('[data-reveal]:not(.revealed)').forEach(el => obs.observe(el));
+  </script>
+
+</body>
+</html>
