@@ -398,8 +398,39 @@
   .booking-meta-row { display: flex; gap: 12px; align-items: center; color: var(--ink-2); }
   .booking-meta-row svg { flex: none; opacity: 0.6; }
 
-  /* Cal-style picker */
+  /* Booking right panel — step wrapper */
   .cal { padding: 32px; display: flex; flex-direction: column; gap: 20px; }
+
+  /* Step 1 — intake form */
+  .intake-form { display: flex; flex-direction: column; gap: 20px; }
+  .intake-form .step-label { font-family: 'JetBrains Mono', monospace; font-size: 11px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 4px; }
+  .intake-form h4 { font-size: 18px; font-weight: 500; letter-spacing: -0.02em; margin: 0 0 4px; }
+  .intake-form p { font-size: 13px; color: var(--ink-2); line-height: 1.5; margin: 0 0 8px; }
+  .intake-fields { display: flex; flex-direction: column; gap: 12px; }
+  .intake-field { display: flex; flex-direction: column; gap: 5px; }
+  .intake-field label { font-size: 12px; font-weight: 500; color: var(--ink-2); letter-spacing: 0.02em; }
+  .intake-field input, .intake-field textarea {
+    background: var(--bg-2); border: 1px solid var(--rule);
+    border-radius: 10px; padding: 11px 14px;
+    font: inherit; font-size: 14px; color: var(--ink);
+    outline: none; transition: border-color 0.15s ease;
+    width: 100%; resize: none;
+  }
+  .intake-field input::placeholder, .intake-field textarea::placeholder { color: var(--ink-4); }
+  .intake-field input:focus, .intake-field textarea:focus { border-color: var(--ink-3); }
+  .intake-field input.error, .intake-field textarea.error { border-color: #EF4444; }
+  .intake-error { font-size: 12px; color: #EF4444; display: none; }
+  .intake-error.visible { display: block; }
+  .intake-next { display: flex; align-items: center; justify-content: space-between; padding: 13px 18px; border-radius: 100px; background: var(--ink); color: var(--bg); font: inherit; font-size: 14px; font-weight: 500; cursor: pointer; border: none; width: 100%; transition: background 0.18s ease; letter-spacing: -0.01em; }
+  .intake-next:hover { background: var(--accent); color: var(--bg); }
+
+  /* Step 2 — calendar (hidden until form complete) */
+  .cal-step { display: none; flex-direction: column; gap: 20px; }
+  .cal-step.active { display: flex; }
+  .cal-back { background: none; border: none; font: inherit; font-size: 12px; color: var(--ink-3); cursor: pointer; display: flex; align-items: center; gap: 5px; padding: 0; letter-spacing: 0.02em; }
+  .cal-back:hover { color: var(--ink); }
+
+  /* Cal-style picker */
   .cal-head { display: flex; justify-content: space-between; align-items: center; }
   .cal-head h4 { margin: 0; font-size: 16px; font-weight: 500; }
   .cal-nav { display: flex; gap: 4px; }
@@ -1159,35 +1190,63 @@
       </div>
 
       <div class="cal">
-        <div class="cal-head">
-          <h4>May 2026</h4>
-          <div class="cal-nav">
-            <button aria-label="Previous month">‹</button>
-            <button aria-label="Next month">›</button>
+
+        <!-- ── Step 1: intake form ── -->
+        <div class="intake-form" id="intake-step">
+          <div>
+            <div class="step-label">Step 1 of 2</div>
+            <h4>Tell me about your project</h4>
+            <p>Takes 30 seconds. Helps me come prepared.</p>
           </div>
-        </div>
-        <div class="cal-grid">
-          <div class="dow">Mo</div><div class="dow">Tu</div><div class="dow">We</div><div class="dow">Th</div><div class="dow">Fr</div><div class="dow">Sa</div><div class="dow">Su</div>
-          <div class="cal-cell muted">27</div><div class="cal-cell muted">28</div><div class="cal-cell muted">29</div><div class="cal-cell muted">30</div>
-          <div class="cal-cell dot">1</div><div class="cal-cell muted">2</div><div class="cal-cell muted">3</div>
-          <div class="cal-cell dot">4</div><div class="cal-cell dot">5</div><div class="cal-cell dot">6</div><div class="cal-cell dot">7</div><div class="cal-cell dot">8</div><div class="cal-cell muted">9</div><div class="cal-cell muted">10</div>
-          <div class="cal-cell dot">11</div><div class="cal-cell dot">12</div><div class="cal-cell dot selected">13</div><div class="cal-cell dot">14</div><div class="cal-cell dot">15</div><div class="cal-cell muted">16</div><div class="cal-cell muted">17</div>
-          <div class="cal-cell dot">18</div><div class="cal-cell dot">19</div><div class="cal-cell dot">20</div><div class="cal-cell dot">21</div><div class="cal-cell dot">22</div><div class="cal-cell muted">23</div><div class="cal-cell muted">24</div>
-          <div class="cal-cell dot">25</div><div class="cal-cell dot">26</div><div class="cal-cell dot">27</div><div class="cal-cell dot">28</div><div class="cal-cell dot">29</div><div class="cal-cell muted">30</div><div class="cal-cell muted">31</div>
+          <div class="intake-fields">
+            <div class="intake-field">
+              <label for="intake-name">Your name *</label>
+              <input type="text" id="intake-name" placeholder="Jane Smith" autocomplete="name" />
+            </div>
+            <div class="intake-field">
+              <label for="intake-email">Email address *</label>
+              <input type="email" id="intake-email" placeholder="jane@startup.com" autocomplete="email" />
+            </div>
+            <div class="intake-field">
+              <label for="intake-website">Startup website <span style="color:var(--ink-3);font-weight:400;">(optional)</span></label>
+              <input type="url" id="intake-website" placeholder="https://yourstartup.com" autocomplete="url" />
+            </div>
+            <div class="intake-field">
+              <label for="intake-desc">What are you looking to build? *</label>
+              <textarea id="intake-desc" rows="3" placeholder="E.g. MVP for a marketplace idea, landing page for a product launch…"></textarea>
+              <span class="intake-error" id="intake-error">Please fill in your name, email, and a short description.</span>
+            </div>
+          </div>
+          <button class="intake-next" id="intake-next">Pick a time <span class="arr">→</span></button>
         </div>
 
-        <div>
-          <div class="mono" style="margin-bottom: 8px;" id="cal-time-label">Wed, May 13 · times in your zone</div>
-          <div class="cal-times">
-            <button>9:00 AM</button>
-            <button>10:00 AM</button>
-            <button class="active">11:30 AM</button>
-            <button>1:00 PM</button>
-            <button>2:30 PM</button>
-            <button>4:00 PM</button>
+        <!-- ── Step 2: calendar ── -->
+        <div class="cal-step" id="cal-step">
+          <button class="cal-back" id="cal-back">← Edit details</button>
+          <div class="cal-head">
+            <h4>May 2026</h4>
+            <div class="cal-nav">
+              <button aria-label="Previous month">‹</button>
+              <button aria-label="Next month">›</button>
+            </div>
           </div>
+          <div class="cal-grid">
+            <div class="dow">Mo</div><div class="dow">Tu</div><div class="dow">We</div><div class="dow">Th</div><div class="dow">Fr</div><div class="dow">Sa</div><div class="dow">Su</div>
+          </div>
+          <div>
+            <div class="mono" style="margin-bottom: 8px;" id="cal-time-label">Pick a date above</div>
+            <div class="cal-times">
+              <button>9:00 AM</button>
+              <button>10:00 AM</button>
+              <button class="active">11:30 AM</button>
+              <button>1:00 PM</button>
+              <button>2:30 PM</button>
+              <button>4:00 PM</button>
+            </div>
+          </div>
+          <a class="btn" id="confirm-btn" style="width: 100%; justify-content: space-between;" href="#">Confirm time <span class="arr">→</span></a>
         </div>
-        <a class="btn" id="confirm-btn" style="width: 100%; justify-content: space-between;" href="mailto:jr@tinystartups.com?subject=Discovery%20call%20%E2%80%94%2011:30%20AM%20Wed%20May%2013">Confirm 11:30 AM · Wed May 13 <span class="arr">→</span></a>
+
       </div>
     </div>
   </div>
@@ -1237,12 +1296,23 @@
                        'July','August','September','October','November','December'];
     const DAY_SHORT = ['Sun','Mon','Tue','Wed','Thu','Fri','Sat'];
 
-    const dayLabel  = document.getElementById('cal-time-label');
+    // ── DOM refs ─────────────────────────────────────────────────────────────
+    const intakeStep = document.getElementById('intake-step');
+    const calStep    = document.getElementById('cal-step');
+    const intakeNext = document.getElementById('intake-next');
+    const calBack    = document.getElementById('cal-back');
+    const intakeErr  = document.getElementById('intake-error');
+    const nameEl     = document.getElementById('intake-name');
+    const emailEl    = document.getElementById('intake-email');
+    const websiteEl  = document.getElementById('intake-website');
+    const descEl     = document.getElementById('intake-desc');
+
+    const dayLabel   = document.getElementById('cal-time-label');
     const confirmBtn = document.getElementById('confirm-btn');
-    const calGrid   = document.querySelector('.cal-grid');
-    const calH4     = document.querySelector('.cal-head h4');
-    const prevBtn   = document.querySelector('.cal-nav button:first-child');
-    const nextBtn   = document.querySelector('.cal-nav button:last-child');
+    const calGrid    = document.querySelector('.cal-grid');
+    const calH4      = document.querySelector('.cal-head h4');
+    const prevBtn    = document.querySelector('.cal-nav button:first-child');
+    const nextBtn    = document.querySelector('.cal-nav button:last-child');
 
     // ── min bookable date = tomorrow ─────────────────────────────────────────
     const TODAY    = new Date(); TODAY.setHours(0,0,0,0);
@@ -1284,10 +1354,24 @@
       const title  = encodeURIComponent('Discovery call — Tiny Startup Studio');
       const tz     = tzStr(year, month, day);
       const dn     = DAY_SHORT[new Date(year, month, day).getDay()];
-      const desc   = encodeURIComponent(
-        `Booked via tinystartupstudio.com\n\nTime: ${timeStr} ${tz} · ${dn} ${MONTHS[month]} ${day}\n\nJaisal will confirm and share a Google Meet link shortly after.`
-      );
-      return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&add=jr%40tinystartups.com&details=${desc}`;
+      const name    = nameEl.value.trim();
+      const website = websiteEl.value.trim();
+      const desc_txt = descEl.value.trim();
+      const details = [
+        `Booked via tinystartupstudio.com`,
+        ``,
+        `Name: ${name}`,
+        `Email: ${emailEl.value.trim()}`,
+        website ? `Website: ${website}` : null,
+        ``,
+        `What they're looking for:`,
+        desc_txt,
+        ``,
+        `Time: ${timeStr} ${tz} · ${dn} ${MONTHS[month]} ${day}`,
+        ``,
+        `Jaisal will confirm and share a Google Meet link shortly after.`
+      ].filter(l => l !== null).join('\n');
+      return `https://calendar.google.com/calendar/render?action=TEMPLATE&text=${title}&dates=${start}/${end}&add=jr%40tinystartups.com&details=${encodeURIComponent(details)}`;
     }
 
     function getDN(y, m, d) { return DAY_SHORT[new Date(y, m, d).getDay()]; }
@@ -1355,15 +1439,16 @@
         calGrid.appendChild(c);
       }
 
-      // Auto-select first bookable day (or clear if none left)
+      // Auto-select first bookable day
       if (selDay && !isBookable(selDay)) selDay = null;
       if (!selDay) {
         for (let d = 1; d <= daysInMonth; d++) { if (isBookable(d)) { selDay = d; break; } }
       }
       if (selDay) {
         calGrid.querySelectorAll('.cal-cell.selected').forEach(x => x.classList.remove('selected'));
-        const cells = calGrid.querySelectorAll('.cal-cell.dot');
-        cells.forEach(c => { if (parseInt(c.textContent) === selDay) c.classList.add('selected'); });
+        calGrid.querySelectorAll('.cal-cell.dot').forEach(c => {
+          if (parseInt(c.textContent) === selDay) c.classList.add('selected');
+        });
         updateLabels();
       } else {
         dayLabel.textContent = `${MONTHS[calMonth]} · pick a day`;
@@ -1372,6 +1457,38 @@
         confirmBtn.removeAttribute('target');
       }
     }
+
+    // ── Step 1 → Step 2 ──────────────────────────────────────────────────────
+    intakeNext.addEventListener('click', () => {
+      const name  = nameEl.value.trim();
+      const email = emailEl.value.trim();
+      const desc  = descEl.value.trim();
+      const emailOk = /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email);
+
+      [nameEl, emailEl, descEl].forEach(el => el.classList.remove('error'));
+      intakeErr.classList.remove('visible');
+
+      if (!name || !email || !emailOk || !desc) {
+        if (!name)    nameEl.classList.add('error');
+        if (!email || !emailOk) emailEl.classList.add('error');
+        if (!desc)    descEl.classList.add('error');
+        intakeErr.textContent = (!email || !emailOk) && email
+          ? 'Please enter a valid email address.'
+          : 'Please fill in your name, email, and a short description.';
+        intakeErr.classList.add('visible');
+        return;
+      }
+
+      intakeStep.style.display = 'none';
+      calStep.classList.add('active');
+      buildCal();
+    });
+
+    // ── Step 2 → Step 1 ──────────────────────────────────────────────────────
+    calBack.addEventListener('click', () => {
+      calStep.classList.remove('active');
+      intakeStep.style.display = '';
+    });
 
     prevBtn.addEventListener('click', () => {
       if (calMonth === 0) { calMonth = 11; calYear--; } else calMonth--;
@@ -1390,8 +1507,6 @@
         updateLabels();
       });
     });
-
-    buildCal();
   })();
 
   // ── CURSOR GLOW ORB (lerp-following + section hue shift) ─────────────────
