@@ -8,7 +8,7 @@
   <link rel="canonical" href="https://www.tinystartupstudio.com/mvp" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@0;1&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter+Tight:ital,wght@0,300;0,400;0,500;0,600;0,700;1,600;1,700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet" />
 
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -65,7 +65,7 @@
       font-size: 11px; letter-spacing: 0.06em;
       text-transform: uppercase; color: var(--ink-3); font-weight: 500;
     }
-    .it { font-family: 'Instrument Serif', serif; font-style: italic; font-weight: 400; }
+    .it { font-style: italic; font-weight: 700; letter-spacing: -0.05em; }
     .container { max-width: 1200px; margin: 0 auto; padding: 0 var(--gutter); }
     .rule { height: 1px; background: var(--rule); width: 100%; }
 
@@ -122,15 +122,16 @@
     }
     .hero-badge .pip svg { display: block; }
     .hero h1 {
-      font-size: clamp(48px, 6vw, 76px);
-      line-height: 0.95; letter-spacing: -0.04em;
-      font-weight: 500; margin-bottom: 28px;
+      font-size: clamp(44px, 5.2vw, 68px);
+      line-height: 1; letter-spacing: -0.04em;
+      font-weight: 600; margin-bottom: 28px;
     }
     .hero h1 .it {
       background: var(--holo);
       -webkit-background-clip: text;
       -webkit-text-fill-color: transparent;
       background-clip: text;
+      font-weight: 700;
     }
     .hero p {
       font-size: 18px; color: var(--ink-3); line-height: 1.6;
@@ -375,7 +376,7 @@
       :root { --gutter: 20px; }
       .build-grid { grid-template-columns: 1fr; }
       nav .nav-right a:not(.btn) { display: none; }
-      .hero h1 { font-size: 42px; }
+      .hero h1 { font-size: 38px; }
       .hero-trust { gap: 20px; flex-wrap: wrap; }
       .step { grid-template-columns: 40px 1fr; }
       .step-num { padding: 24px 0 24px 20px; }
@@ -412,7 +413,7 @@
         </span>
         Idea to MVP · Under 7 days
       </div>
-      <h1>We build your <span class="it">MVP</span><br>while you sleep.</h1>
+      <h1>We build your <span class="it">MVP</span> while you sleep.</h1>
       <p>Full-stack design and development for founders who need to move fast. One team, one week, a working product.</p>
       <div class="hero-actions">
         <a class="btn" href="/#book">Start your MVP <span class="arr">→</span></a>
@@ -490,7 +491,7 @@
   <section class="what" data-reveal>
     <div class="container">
       <div class="mono">What we build</div>
-      <h2>From AI products to<br><span class="it">SaaS and everything between.</span></h2>
+      <h2>From AI products to <span class="it">SaaS and everything between.</span></h2>
       <p>You can work with us on the full journey or just one piece of it. We cover strategy, design, and engineering under one roof.</p>
       <div class="build-grid">
 
@@ -594,7 +595,7 @@
   <section class="journey" data-reveal>
     <div class="container">
       <div class="mono">Our process</div>
-      <h2>We don't follow a template.<br><span class="it">Our process adapts.</span></h2>
+      <h2>We don't follow a template. <span class="it">Our process adapts.</span></h2>
 
       <div class="steps">
         <div class="step" data-reveal data-delay="1">
@@ -637,7 +638,7 @@
   <section class="who" data-reveal>
     <div class="container">
       <div class="mono">Who we work with</div>
-      <h2>Built for founders<br>who <span class="it">move fast.</span></h2>
+      <h2>Built for founders who <span class="it">move fast.</span></h2>
       <div class="who-grid">
         <div class="who-card" data-reveal data-delay="1">
           <div class="icon">
@@ -769,7 +770,7 @@
   <!-- ── CTA BAND ── -->
   <div class="cta-band" data-reveal>
     <div class="mono">Ready to build?</div>
-    <h2>Your idea deserves to<br>exist in the <span class="it">real world.</span></h2>
+    <h2>Your idea deserves to exist in the <span class="it">real world.</span></h2>
     <p>30-minute discovery call. No pitch deck needed. Just tell us what you're building.</p>
     <a class="btn" href="/#book">Book a free call <span class="arr">→</span></a>
     <div class="sub-note">Free · no obligation · one-pager scope &amp; quote afterwards</div>
