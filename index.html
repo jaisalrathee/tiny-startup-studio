@@ -256,9 +256,22 @@
   }
   .david-svg {
     width: 62%;
-    filter: drop-shadow(0 10px 44px rgba(0,0,0,0.65))
-            drop-shadow(0 0 22px rgba(124,58,237,0.2));
+    filter: drop-shadow(0 12px 48px rgba(0,0,0,0.55))
+            drop-shadow(0 0 32px rgba(124,58,237,0.28));
     will-change: transform;
+    overflow: visible;
+  }
+  #david-head {
+    transform-box: fill-box;
+    transform-origin: 50% 100%; /* pivot at neck-shoulder junction */
+    will-change: transform;
+  }
+  .d-holo-edge {
+    animation: d-hue 6s linear infinite;
+  }
+  @keyframes d-hue {
+    from { filter: hue-rotate(0deg); }
+    to   { filter: hue-rotate(360deg); }
   }
   .d-particles {
     position: absolute; inset: 0; pointer-events: none; z-index: 3; overflow: hidden;
@@ -866,95 +879,116 @@
           <div class="d-figure">
             <svg class="david-svg" id="david-svg" viewBox="0 0 360 490" xmlns="http://www.w3.org/2000/svg">
               <defs>
-                <!-- Warm Carrara marble base gradient -->
+                <!-- Pure white Carrara marble -->
                 <linearGradient id="mb" x1="0" y1="0" x2="360" y2="490" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%"   stop-color="#F0ECE3"/>
-                  <stop offset="28%"  stop-color="#E4DDD2"/>
-                  <stop offset="62%"  stop-color="#CECAC0"/>
-                  <stop offset="100%" stop-color="#B8AFA4"/>
+                  <stop offset="0%"   stop-color="#FFFFFF"/>
+                  <stop offset="22%"  stop-color="#F8F5F0"/>
+                  <stop offset="58%"  stop-color="#EDE8DF"/>
+                  <stop offset="100%" stop-color="#D8D0C4"/>
                 </linearGradient>
 
                 <!-- Mouse-tracked directional light -->
                 <radialGradient id="dl" cx="130" cy="120" r="260" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%"   stop-color="rgba(255,255,255,0.55)"/>
-                  <stop offset="42%"  stop-color="rgba(255,255,255,0.0)"/>
-                  <stop offset="100%" stop-color="rgba(0,0,0,0.28)"/>
+                  <stop offset="0%"   stop-color="rgba(255,255,255,0.75)"/>
+                  <stop offset="38%"  stop-color="rgba(255,255,255,0.0)"/>
+                  <stop offset="100%" stop-color="rgba(70,60,50,0.42)"/>
                 </radialGradient>
 
-                <!-- Marble vein texture -->
+                <!-- Holographic gradient for head edge -->
+                <linearGradient id="hg" x1="0%" y1="0%" x2="100%" y2="100%">
+                  <stop offset="0%"   stop-color="#7c3aed"/>
+                  <stop offset="25%"  stop-color="#2563eb"/>
+                  <stop offset="50%"  stop-color="#06b6d4"/>
+                  <stop offset="75%"  stop-color="#10b981"/>
+                  <stop offset="100%" stop-color="#7c3aed"/>
+                </linearGradient>
+
+                <!-- Marble vein texture (more visible on white) -->
                 <filter id="mf" x="-5%" y="-5%" width="110%" height="110%">
-                  <feTurbulence type="fractalNoise" baseFrequency="0.018 0.026" numOctaves="6" seed="42" result="noise"/>
+                  <feTurbulence type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="7" seed="42" result="noise"/>
                   <feColorMatrix type="saturate" values="0" in="noise" result="gs"/>
                   <feComponentTransfer in="gs" result="subtle">
-                    <feFuncA type="linear" slope="0.12"/>
+                    <feFuncA type="linear" slope="0.16"/>
                   </feComponentTransfer>
                   <feBlend in="SourceGraphic" in2="subtle" mode="multiply" result="veined"/>
                   <feComposite in="veined" in2="SourceGraphic" operator="in"/>
                 </filter>
 
-                <!-- Soft purple glow -->
+                <!-- Soft glow filter -->
                 <filter id="gf" x="-60%" y="-60%" width="220%" height="220%">
                   <feGaussianBlur stdDeviation="24"/>
                 </filter>
               </defs>
 
-              <!-- Purple aura halo behind bust -->
-              <ellipse cx="180" cy="250" rx="96" ry="130" fill="#8B5CF6" opacity="0.22" filter="url(#gf)"/>
+              <!-- Purple aura behind statue -->
+              <ellipse cx="180" cy="255" rx="100" ry="138" fill="#8B5CF6" opacity="0.24" filter="url(#gf)"/>
 
-              <!-- Bust — marble base with vein texture -->
-              <path d="M 180,28 C 218,28 252,56 252,96 C 252,132 240,158 226,173 C 218,182 206,188 198,193 L 202,218 C 224,229 256,244 280,263 C 304,279 320,302 320,328 L 318,398 L 290,408 L 260,422 L 260,455 L 292,455 L 292,472 L 68,472 L 68,455 L 100,455 L 100,422 L 70,408 L 42,398 L 40,328 C 40,302 56,279 80,263 C 104,244 136,229 158,218 L 162,193 C 154,188 142,182 134,173 C 120,158 108,132 108,96 C 108,56 142,28 180,28 Z" fill="url(#mb)" filter="url(#mf)"/>
+              <!-- ── BODY (static) ── -->
+              <g id="david-body">
+                <!-- Gap cover behind neck base -->
+                <ellipse cx="180" cy="216" rx="32" ry="12" fill="url(#mb)"/>
+                <!-- Body marble base -->
+                <path d="M 158,218 L 202,218 C 224,229 256,244 280,263 C 304,279 320,302 320,328 L 318,398 L 290,408 L 260,422 L 260,455 L 292,455 L 292,472 L 68,472 L 68,455 L 100,455 L 100,422 L 70,408 L 42,398 L 40,328 C 40,302 56,279 80,263 C 104,244 136,229 158,218 Z" fill="url(#mb)" filter="url(#mf)"/>
+                <!-- Body light overlay -->
+                <path d="M 158,218 L 202,218 C 224,229 256,244 280,263 C 304,279 320,302 320,328 L 318,398 L 290,408 L 260,422 L 260,455 L 292,455 L 292,472 L 68,472 L 68,455 L 100,455 L 100,422 L 70,408 L 42,398 L 40,328 C 40,302 56,279 80,263 C 104,244 136,229 158,218 Z" fill="url(#dl)" opacity="0.85"/>
+                <!-- Body contour -->
+                <path d="M 158,218 L 202,218 C 224,229 256,244 280,263 C 304,279 320,302 320,328 L 318,398 L 290,408 L 260,422 L 260,455 L 292,455 L 292,472 L 68,472 L 68,455 L 100,455 L 100,422 L 70,408 L 42,398 L 40,328 C 40,302 56,279 80,263 C 104,244 136,229 158,218 Z" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="0.8"/>
+                <!-- Shoulder highlights -->
+                <path d="M 80,268 C 102,262 132,258 162,256" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <path d="M 280,268 C 258,262 228,258 198,256" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <!-- Pedestal lines -->
+                <line x1="100" y1="422" x2="260" y2="422" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
+                <line x1="68"  y1="455" x2="292" y2="455" stroke="rgba(0,0,0,0.1)"  stroke-width="1.5"/>
+              </g>
 
-              <!-- Dynamic directional light overlay -->
-              <path d="M 180,28 C 218,28 252,56 252,96 C 252,132 240,158 226,173 C 218,182 206,188 198,193 L 202,218 C 224,229 256,244 280,263 C 304,279 320,302 320,328 L 318,398 L 290,408 L 260,422 L 260,455 L 292,455 L 292,472 L 68,472 L 68,455 L 100,455 L 100,422 L 70,408 L 42,398 L 40,328 C 40,302 56,279 80,263 C 104,244 136,229 158,218 L 162,193 C 154,188 142,182 134,173 C 120,158 108,132 108,96 C 108,56 142,28 180,28 Z" fill="url(#dl)" opacity="0.88"/>
+              <!-- ── HEAD (mouse-tracked, pivots at neck base y=218) ── -->
+              <g id="david-head">
+                <!-- Head+neck marble base -->
+                <path d="M 180,28 C 218,28 252,56 252,96 C 252,132 240,158 226,173 C 218,182 206,188 198,193 L 202,218 L 158,218 L 162,193 C 154,188 142,182 134,173 C 120,158 108,132 108,96 C 108,56 142,28 180,28 Z" fill="url(#mb)" filter="url(#mf)"/>
+                <!-- Head light overlay -->
+                <path d="M 180,28 C 218,28 252,56 252,96 C 252,132 240,158 226,173 C 218,182 206,188 198,193 L 202,218 L 158,218 L 162,193 C 154,188 142,182 134,173 C 120,158 108,132 108,96 C 108,56 142,28 180,28 Z" fill="url(#dl)" opacity="0.88"/>
+                <!-- Holographic animated edge on head -->
+                <path class="d-holo-edge" d="M 180,28 C 218,28 252,56 252,96 C 252,132 240,158 226,173 C 218,182 206,188 198,193 L 202,218 L 158,218 L 162,193 C 154,188 142,182 134,173 C 120,158 108,132 108,96 C 108,56 142,28 180,28 Z" fill="none" stroke="url(#hg)" stroke-width="1.5" opacity="0.7"/>
+                <!-- White inner rim -->
+                <path d="M 180,28 C 218,28 252,56 252,96 C 252,132 240,158 226,173 C 218,182 206,188 198,193 L 202,218 L 158,218 L 162,193 C 154,188 142,182 134,173 C 120,158 108,132 108,96 C 108,56 142,28 180,28 Z" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="0.6"/>
 
-              <!-- Contour rim highlight -->
-              <path d="M 180,28 C 218,28 252,56 252,96 C 252,132 240,158 226,173 C 218,182 206,188 198,193 L 202,218 C 224,229 256,244 280,263 C 304,279 320,302 320,328 L 318,398 L 290,408 L 260,422 L 260,455 L 292,455 L 292,472 L 68,472 L 68,455 L 100,455 L 100,422 L 70,408 L 42,398 L 40,328 C 40,302 56,279 80,263 C 104,244 136,229 158,218 L 162,193 C 154,188 142,182 134,173 C 120,158 108,132 108,96 C 108,56 142,28 180,28 Z" fill="none" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                <!-- Hair at crown -->
+                <ellipse cx="180" cy="44" rx="50" ry="20" fill="rgba(0,0,0,0.065)"/>
+                <path d="M 134,54 C 148,40 164,32 180,30 C 196,32 212,40 226,54" stroke="rgba(0,0,0,0.05)" stroke-width="0.8" fill="none"/>
 
-              <!-- Hair at crown -->
-              <ellipse cx="180" cy="44" rx="50" ry="20" fill="rgba(0,0,0,0.07)"/>
-              <path d="M 134,54 C 148,40 164,32 180,30 C 196,32 212,40 226,54" stroke="rgba(0,0,0,0.05)" stroke-width="0.8" fill="none"/>
+                <!-- Forehead highlight -->
+                <ellipse cx="172" cy="62" rx="24" ry="16" fill="rgba(255,255,255,0.1)" transform="rotate(-8 172 62)"/>
 
-              <!-- Forehead marble highlight -->
-              <ellipse cx="174" cy="64" rx="22" ry="14" fill="rgba(255,255,255,0.08)" transform="rotate(-8 174 64)"/>
+                <!-- Brow ridges -->
+                <ellipse cx="158" cy="87" rx="13" ry="4"   fill="rgba(0,0,0,0.07)" transform="rotate(-5 158 87)"/>
+                <ellipse cx="202" cy="87" rx="13" ry="4"   fill="rgba(0,0,0,0.07)" transform="rotate(5 202 87)"/>
 
-              <!-- Brow ridges -->
-              <ellipse cx="158" cy="87" rx="13" ry="4" fill="rgba(0,0,0,0.07)" transform="rotate(-5 158 87)"/>
-              <ellipse cx="202" cy="87" rx="13" ry="4" fill="rgba(0,0,0,0.07)" transform="rotate(5 202 87)"/>
+                <!-- Eye sockets -->
+                <ellipse cx="158" cy="96" rx="11" ry="7"   fill="rgba(0,0,0,0.06)"/>
+                <ellipse cx="202" cy="96" rx="11" ry="7"   fill="rgba(0,0,0,0.06)"/>
 
-              <!-- Eye sockets -->
-              <ellipse cx="158" cy="96" rx="11" ry="7" fill="rgba(0,0,0,0.06)"/>
-              <ellipse cx="202" cy="96" rx="11" ry="7" fill="rgba(0,0,0,0.06)"/>
+                <!-- Nose bridge -->
+                <path d="M 176,103 L 180,128 L 184,103" stroke="rgba(0,0,0,0.08)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
+                <ellipse cx="174" cy="130" rx="5" ry="3"   fill="rgba(0,0,0,0.055)" transform="rotate(-10 174 130)"/>
+                <ellipse cx="186" cy="130" rx="5" ry="3"   fill="rgba(0,0,0,0.055)" transform="rotate(10 186 130)"/>
 
-              <!-- Nose bridge shadow -->
-              <path d="M 176,103 L 180,128 L 184,103" stroke="rgba(0,0,0,0.08)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-              <!-- Nostrils -->
-              <ellipse cx="174" cy="130" rx="5" ry="3" fill="rgba(0,0,0,0.06)" transform="rotate(-10 174 130)"/>
-              <ellipse cx="186" cy="130" rx="5" ry="3" fill="rgba(0,0,0,0.06)" transform="rotate(10 186 130)"/>
+                <!-- Lip line -->
+                <path d="M 165,145 C 170,150 176,152 180,152 C 184,152 190,150 195,145" stroke="rgba(0,0,0,0.07)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
 
-              <!-- Lip line -->
-              <path d="M 165,145 C 170,150 176,152 180,152 C 184,152 190,150 195,145" stroke="rgba(0,0,0,0.07)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
+                <!-- Chin shadow -->
+                <ellipse cx="180" cy="165" rx="20" ry="8"  fill="rgba(0,0,0,0.05)"/>
 
-              <!-- Chin shadow -->
-              <ellipse cx="180" cy="165" rx="20" ry="8" fill="rgba(0,0,0,0.05)"/>
+                <!-- Cheekbone highlights -->
+                <ellipse cx="152" cy="120" rx="12" ry="9"  fill="rgba(255,255,255,0.07)" transform="rotate(-12 152 120)"/>
+                <ellipse cx="208" cy="120" rx="12" ry="9"  fill="rgba(255,255,255,0.07)" transform="rotate(12 208 120)"/>
 
-              <!-- Cheekbone highlights -->
-              <ellipse cx="152" cy="120" rx="12" ry="9" fill="rgba(255,255,255,0.06)" transform="rotate(-12 152 120)"/>
-              <ellipse cx="208" cy="120" rx="12" ry="9" fill="rgba(255,255,255,0.06)" transform="rotate(12 208 120)"/>
+                <!-- Neck shadow sides -->
+                <path d="M 158,178 C 156,185 155,191 156,197" stroke="rgba(0,0,0,0.08)" stroke-width="2" fill="none" stroke-linecap="round"/>
+                <path d="M 202,178 C 204,185 205,191 204,197" stroke="rgba(0,0,0,0.08)" stroke-width="2" fill="none" stroke-linecap="round"/>
 
-              <!-- Neck shadow sides -->
-              <path d="M 158,178 C 156,185 155,191 156,197" stroke="rgba(0,0,0,0.08)" stroke-width="2" fill="none" stroke-linecap="round"/>
-              <path d="M 202,178 C 204,185 205,191 204,197" stroke="rgba(0,0,0,0.08)" stroke-width="2" fill="none" stroke-linecap="round"/>
-
-              <!-- Draped collar line -->
-              <path d="M 152,194 C 162,189 172,187 180,187 C 188,187 198,189 208,194" stroke="rgba(0,0,0,0.09)" stroke-width="1" fill="none" stroke-linecap="round"/>
-
-              <!-- Shoulder definition -->
-              <path d="M 80,268 C 102,262 132,258 162,256" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-              <path d="M 280,268 C 258,262 228,258 198,256" stroke="rgba(255,255,255,0.06)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-
-              <!-- Pedestal division lines -->
-              <line x1="100" y1="422" x2="260" y2="422" stroke="rgba(0,0,0,0.1)" stroke-width="1"/>
-              <line x1="68" y1="455" x2="292" y2="455" stroke="rgba(0,0,0,0.1)" stroke-width="1.5"/>
+                <!-- Collar drape -->
+                <path d="M 152,194 C 162,189 172,187 180,187 C 188,187 198,189 208,194" stroke="rgba(0,0,0,0.09)" stroke-width="1" fill="none" stroke-linecap="round"/>
+              </g>
             </svg>
           </div>
 
@@ -1828,8 +1862,9 @@
   (function () {
     const scene  = document.getElementById('david-scene');
     const svg    = document.getElementById('david-svg');
+    const head   = document.getElementById('david-head');
     const pCont  = document.getElementById('d-particles');
-    if (!scene) return;
+    if (!scene || !head) return;
 
     // ── Spawn floating tech glyphs ──────────────────────────────────────────
     const glyphs = [
@@ -1845,65 +1880,82 @@
       const el = document.createElement('span');
       el.className = 'd-particle' + (g.holo ? ' holo' : '');
       el.textContent = g.t;
-      // Alternate left/right sides of the bust (bust ≈ 19%–81% width)
       const onLeft = Math.random() < 0.5;
-      const x = onLeft ? (3 + Math.random() * 14) : (83 + Math.random() * 14);
-      const y = 10 + Math.random() * 72;
-      const dur  = (7 + Math.random() * 7).toFixed(1);
-      const del  = (-Math.random() * 10).toFixed(2);
-      const lo   = (0.06 + Math.random() * 0.10).toFixed(2);
-      const hi   = (0.18 + Math.random() * 0.18).toFixed(2);
+      const x   = onLeft ? (3 + Math.random() * 14) : (83 + Math.random() * 14);
+      const y   = 10 + Math.random() * 72;
+      const dur = (7 + Math.random() * 7).toFixed(1);
+      const del = (-Math.random() * 10).toFixed(2);
+      const lo  = (0.06 + Math.random() * 0.10).toFixed(2);
+      const hi  = (0.18 + Math.random() * 0.18).toFixed(2);
       el.style.cssText = `left:${x.toFixed(1)}%;top:${y.toFixed(1)}%;--dur:${dur}s;--delay:${del}s;--lo:${lo};--hi:${hi}`;
       pCont.appendChild(el);
     });
 
-    // ── Mouse-tracked lighting + 3D tilt ───────────────────────────────────
     if (!window.matchMedia('(pointer:fine)').matches) return;
 
+    // ── Head look-at: tracks cursor globally (follows you anywhere on page) ─
     const dlGrad = svg ? svg.querySelector('#dl') : null;
-    let targetRX = 0, targetRY = 0, currentRX = 0, currentRY = 0;
-    let targetMX = 0.36, targetMY = 0.25;
-    let currentMX = 0.36, currentMY = 0.25;
-    let isHovered = false;
 
-    scene.addEventListener('mouseenter', () => { isHovered = true; });
-    scene.addEventListener('mouseleave', () => {
-      isHovered = false;
-      targetRX = 0; targetRY = 0;
-      targetMX = 0.36; targetMY = 0.25;
-    });
-    scene.addEventListener('mousemove', (e) => {
+    // Head rotation targets (set by mouse or idle sway)
+    let tRX = 0, tRY = 0;           // target rotation X (nod) / Y (turn)
+    let cRX = 0, cRY = 0;           // current lerped values
+    let tMX = 0.36, tMY = 0.25;    // target light pos (normalised scene space)
+    let cMX = 0.36, cMY = 0.25;
+    let mouseMoved = false;
+    const startT = performance.now();
+
+    document.addEventListener('mousemove', (e) => {
+      mouseMoved = true;
       const rect = scene.getBoundingClientRect();
-      const nx = (e.clientX - rect.left) / rect.width;
-      const ny = (e.clientY - rect.top)  / rect.height;
-      targetRX = (ny - 0.5) * -16;
-      targetRY = (nx - 0.5) *  20;
-      targetMX = nx;
-      targetMY = ny;
+
+      // Head center in page coords (upper-quarter of scene)
+      const hcx = rect.left + rect.width  * 0.5;
+      const hcy = rect.top  + rect.height * 0.30;
+
+      const dx = e.clientX - hcx;
+      const dy = e.clientY - hcy;
+      const dist = Math.sqrt(dx * dx + dy * dy);
+      const maxDist = 700; // tracking radius in px
+      const inf = Math.max(0, 1 - dist / maxDist); // falls to 0 beyond radius
+
+      // Head turn: +Y = look right, +X = look down
+      tRY = Math.max(-14, Math.min(14, (dx / 14) * inf));
+      tRX = Math.max(-7,  Math.min(7,  (-dy / 28) * inf));
+
+      // Light gradient: clamp to 0-1 inside scene
+      tMX = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
+      tMY = Math.max(0, Math.min(1, (e.clientY - rect.top)  / rect.height));
     });
 
-    function tick() {
-      currentRX += (targetRX - currentRX) * 0.08;
-      currentRY += (targetRY - currentRY) * 0.08;
-      currentMX += (targetMX - currentMX) * 0.06;
-      currentMY += (targetMY - currentMY) * 0.06;
+    function tick(now) {
+      const t = (now - startT) / 1000;
 
-      // 3D tilt on the scene card
-      if (isHovered || Math.abs(currentRX) > 0.05 || Math.abs(currentRY) > 0.05) {
-        scene.style.transform = `rotateX(${currentRX}deg) rotateY(${currentRY}deg)`;
-      } else {
-        scene.style.transform = '';
+      // When no mouse activity, gentle idle sway
+      if (!mouseMoved) {
+        tRY = Math.sin(t * 0.38) * 5;
+        tRX = Math.sin(t * 0.29 + 0.9) * 2.5;
+        tMX = 0.36 + Math.sin(t * 0.38) * 0.1;
+        tMY = 0.25 + Math.sin(t * 0.29 + 0.9) * 0.06;
       }
 
-      // Update dynamic light gradient in SVG coordinate space (0–360 × 0–490)
+      // Lerp everything
+      cRX += (tRX - cRX) * 0.07;
+      cRY += (tRY - cRY) * 0.07;
+      cMX += (tMX - cMX) * 0.05;
+      cMY += (tMY - cMY) * 0.05;
+
+      // Apply head rotation (pivots at neck base via transform-origin: 50% 100%)
+      head.style.transform = `perspective(700px) rotateX(${cRX.toFixed(3)}deg) rotateY(${cRY.toFixed(3)}deg)`;
+
+      // Update directional light in SVG coordinate space
       if (dlGrad) {
-        dlGrad.setAttribute('cx', (currentMX * 360).toFixed(1));
-        dlGrad.setAttribute('cy', (currentMY * 490).toFixed(1));
+        dlGrad.setAttribute('cx', (cMX * 360).toFixed(1));
+        dlGrad.setAttribute('cy', (cMY * 490).toFixed(1));
       }
 
       requestAnimationFrame(tick);
     }
-    tick();
+    requestAnimationFrame(tick);
   })();
 
   // ── SCROLL REVEALS ────────────────────────────────────────────────────────
