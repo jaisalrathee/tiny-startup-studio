@@ -201,132 +201,141 @@
   .hero-actions { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
   .hero-status { display: inline-flex; align-items: center; gap: 8px; font-size: 13px; color: var(--ink-3); }
 
-  /* ── Digital David scene ── */
+  /* ── Hero artifact card ── */
   .artifact-wrap {
     perspective: 1100px;
     perspective-origin: 50% 50%;
     display: flex; align-items: center; justify-content: center;
   }
-  .david-scene {
+  .artifact-card {
     position: relative;
     width: 100%; max-width: 480px;
-    height: 460px;
-    background: #07060A;
+    background: #0C0B09;
     border-radius: 20px;
     overflow: hidden;
     border: 1px solid rgba(255,255,255,0.07);
     box-shadow:
-      0 32px 80px -16px rgba(0,0,0,0.5),
-      0 0 0 1px rgba(255,255,255,0.04) inset,
-      0 0 80px -20px rgba(124,58,237,0.4);
-    animation: d-float 7s ease-in-out infinite;
+      0 32px 80px -16px rgba(0,0,0,0.35),
+      0 0 0 1px rgba(255,255,255,0.04) inset;
+    animation: artifact-float 7s ease-in-out infinite;
     will-change: transform;
+    transform-style: preserve-3d;
+    transition: box-shadow 0.3s ease;
     cursor: default;
   }
-  .david-scene::before {
+  .artifact-card::before {
     content: '';
     position: absolute; inset: -1px;
     border-radius: 21px;
     background: var(--holo);
     z-index: -1;
-    opacity: 0.22;
+    opacity: 0.25;
   }
-  @keyframes d-float {
-    0%,100% { transform: translateY(0); }
+  @keyframes artifact-float {
+    0%,100% { transform: translateY(0px); }
     50%      { transform: translateY(-14px); }
   }
-  .d-grid {
+  .artifact-grid-bg {
     position: absolute; inset: 0; pointer-events: none;
     background-image:
-      linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
+      linear-gradient(rgba(255,255,255,0.025) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255,255,255,0.025) 1px, transparent 1px);
     background-size: 44px 44px;
   }
-  .d-atmosphere {
-    position: absolute; inset: 0; pointer-events: none;
-    background:
-      radial-gradient(ellipse 65% 55% at 50% 26%, rgba(124,58,237,0.16) 0%, transparent 65%),
-      radial-gradient(ellipse 55% 35% at 50% 92%, rgba(0,0,0,0.55) 0%, transparent 70%);
+  .artifact-shine {
+    position: absolute; inset: 0; pointer-events: none; z-index: 10;
+    background: radial-gradient(circle at 50% 30%, rgba(255,255,255,0.06) 0%, transparent 65%);
+    transition: background 0.08s linear;
   }
-  .d-figure {
-    position: absolute; inset: 0;
-    display: flex; align-items: center; justify-content: center;
-    z-index: 2;
-    padding: 16px 0 44px;
-  }
-  .david-svg {
-    width: 62%;
-    filter: drop-shadow(0 12px 48px rgba(0,0,0,0.55))
-            drop-shadow(0 0 32px rgba(124,58,237,0.28));
-    will-change: transform;
-    overflow: visible;
-  }
-  #david-head {
-    transform-box: fill-box;
-    transform-origin: 50% 100%; /* pivot at neck-shoulder junction */
-    will-change: transform;
-  }
-  .d-holo-edge {
-    animation: d-hue 6s linear infinite;
-  }
-  @keyframes d-hue {
-    from { filter: hue-rotate(0deg); }
-    to   { filter: hue-rotate(360deg); }
-  }
-  .d-particles {
-    position: absolute; inset: 0; pointer-events: none; z-index: 3; overflow: hidden;
-  }
-  .d-particle {
-    position: absolute;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 10px; font-weight: 500;
-    letter-spacing: 0.05em;
-    color: rgba(255,255,255,0.14);
-    animation: p-float var(--dur,8s) var(--delay,0s) ease-in-out infinite;
-    will-change: transform, opacity;
-  }
-  .d-particle.holo {
-    background: var(--holo);
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    opacity: 0.5;
-  }
-  @keyframes p-float {
-    0%,100% { transform: translateY(0) translateX(0); opacity: var(--lo,0.1); }
-    35%      { transform: translateY(-10px) translateX(3px); opacity: var(--hi,0.24); }
-    70%      { transform: translateY(7px) translateX(-3px); opacity: var(--lo,0.1); }
-  }
-  .d-fade-bottom {
-    position: absolute; bottom: 0; left: 0; right: 0; height: 90px;
-    background: linear-gradient(transparent, #07060A);
-    pointer-events: none; z-index: 4;
-  }
-  .d-ui-top {
-    position: absolute; top: 18px; left: 22px; right: 22px;
+  .artifact-body { position: relative; z-index: 2; padding: 28px; }
+  .artifact-header {
     display: flex; align-items: center; justify-content: space-between;
-    z-index: 5; pointer-events: none;
+    margin-bottom: 28px;
   }
-  .d-ui-bottom {
-    position: absolute; bottom: 18px; left: 22px; right: 22px;
-    display: flex; align-items: center; justify-content: space-between;
-    z-index: 5; pointer-events: none;
-  }
-  .d-mono-sm {
-    font-family: 'JetBrains Mono', monospace; font-size: 9px;
+  .artifact-header .a-label {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
     letter-spacing: 0.08em; text-transform: uppercase;
+    color: rgba(255,255,255,0.3);
   }
-  .d-tag { color: rgba(255,255,255,0.2); }
-  .d-status {
+  .artifact-live {
     display: flex; align-items: center; gap: 5px;
-    color: rgba(168,148,255,0.65);
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.06em; text-transform: uppercase;
+    color: #4ADE80;
   }
-  .d-dot {
-    width: 4px; height: 4px; border-radius: 50%;
-    background: rgba(168,148,255,0.85);
-    animation: d-blink 2.2s step-end infinite;
+  .artifact-live-dot {
+    width: 5px; height: 5px; border-radius: 50%; background: #4ADE80;
+    animation: artifact-blink 1.4s step-end infinite;
   }
-  @keyframes d-blink { 0%,100%{opacity:1} 50%{opacity:0.2} }
+  @keyframes artifact-blink { 0%,100%{opacity:1} 50%{opacity:0.25} }
+  .artifact-title {
+    font-size: 15px; font-weight: 500; color: rgba(255,255,255,0.9);
+    letter-spacing: -0.01em; margin-bottom: 6px;
+  }
+  .artifact-sub {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: rgba(255,255,255,0.25); letter-spacing: 0.04em;
+    text-transform: uppercase; margin-bottom: 28px;
+  }
+  .artifact-rows { display: flex; flex-direction: column; gap: 10px; }
+  .artifact-row {
+    display: flex; flex-direction: column; gap: 5px;
+  }
+  .artifact-row-top {
+    display: flex; align-items: center; justify-content: space-between;
+    font-size: 12px;
+  }
+  .artifact-row-name { color: rgba(255,255,255,0.65); font-weight: 500; }
+  .artifact-row-status {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    letter-spacing: 0.04em; text-transform: uppercase;
+  }
+  .artifact-row-status.done  { color: #4ADE80; }
+  .artifact-row-status.active{ color: rgba(255,255,255,0.4); }
+  .artifact-row-status.idle  { color: rgba(255,255,255,0.2); }
+  .artifact-bar {
+    height: 3px; background: rgba(255,255,255,0.06);
+    border-radius: 2px; overflow: hidden;
+  }
+  .artifact-bar-fill {
+    height: 100%; border-radius: 2px;
+    background: var(--holo);
+    transform-origin: left;
+    animation: bar-grow 1.4s cubic-bezier(0.22,1,0.36,1) forwards;
+  }
+  .artifact-bar-fill.animated {
+    animation: bar-pulse 2.4s ease-in-out infinite;
+  }
+  @keyframes bar-grow { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+  @keyframes bar-pulse {
+    0%,100%{ opacity: 1; } 50%{ opacity: 0.55; }
+  }
+  .artifact-footer {
+    margin-top: 28px; padding-top: 20px;
+    border-top: 1px solid rgba(255,255,255,0.07);
+    display: flex; align-items: center; justify-content: space-between;
+  }
+  .artifact-footer .a-domain {
+    font-family: 'JetBrains Mono', monospace; font-size: 11px;
+    color: rgba(255,255,255,0.35); letter-spacing: 0.02em;
+  }
+  .artifact-footer .a-day {
+    font-family: 'JetBrains Mono', monospace; font-size: 10px;
+    color: rgba(255,255,255,0.2); letter-spacing: 0.05em; text-transform: uppercase;
+  }
+  .artifact-day-counter {
+    margin-top: 20px;
+    display: flex; gap: 6px;
+  }
+  .artifact-pip {
+    flex: 1; height: 3px; border-radius: 2px;
+    background: rgba(255,255,255,0.08);
+  }
+  .artifact-pip.done { background: var(--holo); }
+  .artifact-pip.active {
+    background: linear-gradient(90deg, #7c3aed, rgba(255,255,255,0.12));
+    animation: bar-pulse 1.8s ease-in-out infinite;
+  }
 
   .marquee {
     margin-top: 80px;
@@ -865,139 +874,71 @@
         </div>
       </div>
 
-      <!-- ── Digital David ── -->
+      <!-- ── Artifact card ── -->
       <div class="artifact-wrap" data-reveal data-delay="2">
-        <div class="david-scene" id="david-scene">
-          <div class="d-grid"></div>
-          <div class="d-atmosphere"></div>
+        <div class="artifact-card" id="artifact-card">
+          <div class="artifact-grid-bg"></div>
+          <div class="artifact-shine" id="artifact-shine"></div>
+          <div class="artifact-body">
+            <div class="artifact-header">
+              <span class="a-label">Sprint 01 — week build</span>
+              <span class="artifact-live"><span class="artifact-live-dot"></span>Active</span>
+            </div>
+            <div class="artifact-title">your-startup.com</div>
+            <div class="artifact-sub">Day 4 of 7 · 3 days remaining</div>
 
-          <div class="d-ui-top">
-            <span class="d-mono-sm d-tag">Digital David</span>
-            <span class="d-mono-sm d-status"><span class="d-dot"></span>Studio · London</span>
-          </div>
+            <div class="artifact-rows">
+              <div class="artifact-row">
+                <div class="artifact-row-top">
+                  <span class="artifact-row-name">Discovery &amp; scope</span>
+                  <span class="artifact-row-status done">Done</span>
+                </div>
+                <div class="artifact-bar"><div class="artifact-bar-fill" style="width:100%;animation-delay:0s"></div></div>
+              </div>
+              <div class="artifact-row">
+                <div class="artifact-row-top">
+                  <span class="artifact-row-name">Design system</span>
+                  <span class="artifact-row-status done">Done</span>
+                </div>
+                <div class="artifact-bar"><div class="artifact-bar-fill" style="width:100%;animation-delay:0.15s"></div></div>
+              </div>
+              <div class="artifact-row">
+                <div class="artifact-row-top">
+                  <span class="artifact-row-name">Core build</span>
+                  <span class="artifact-row-status active">72%</span>
+                </div>
+                <div class="artifact-bar"><div class="artifact-bar-fill animated" style="width:72%;animation-delay:0.3s"></div></div>
+              </div>
+              <div class="artifact-row">
+                <div class="artifact-row-top">
+                  <span class="artifact-row-name">QA &amp; polish</span>
+                  <span class="artifact-row-status idle">—</span>
+                </div>
+                <div class="artifact-bar"><div class="artifact-bar-fill" style="width:0%;"></div></div>
+              </div>
+              <div class="artifact-row">
+                <div class="artifact-row-top">
+                  <span class="artifact-row-name">Deploy &amp; handoff</span>
+                  <span class="artifact-row-status idle">—</span>
+                </div>
+                <div class="artifact-bar"><div class="artifact-bar-fill" style="width:0%;"></div></div>
+              </div>
+            </div>
 
-          <div class="d-figure">
-            <svg class="david-svg" id="david-svg" viewBox="0 0 360 490" xmlns="http://www.w3.org/2000/svg">
-              <defs>
-                <!-- Pure white Carrara marble -->
-                <linearGradient id="mb" x1="0" y1="0" x2="360" y2="490" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%"   stop-color="#FFFFFF"/>
-                  <stop offset="22%"  stop-color="#F8F5F0"/>
-                  <stop offset="58%"  stop-color="#EDE8DF"/>
-                  <stop offset="100%" stop-color="#D8D0C4"/>
-                </linearGradient>
+            <div class="artifact-day-counter">
+              <div class="artifact-pip done"></div>
+              <div class="artifact-pip done"></div>
+              <div class="artifact-pip done"></div>
+              <div class="artifact-pip active"></div>
+              <div class="artifact-pip"></div>
+              <div class="artifact-pip"></div>
+              <div class="artifact-pip"></div>
+            </div>
 
-                <!-- Mouse-tracked directional light -->
-                <radialGradient id="dl" cx="130" cy="120" r="260" gradientUnits="userSpaceOnUse">
-                  <stop offset="0%"   stop-color="rgba(255,255,255,0.75)"/>
-                  <stop offset="38%"  stop-color="rgba(255,255,255,0.0)"/>
-                  <stop offset="100%" stop-color="rgba(70,60,50,0.42)"/>
-                </radialGradient>
-
-                <!-- Holographic gradient for head edge -->
-                <linearGradient id="hg" x1="0%" y1="0%" x2="100%" y2="100%">
-                  <stop offset="0%"   stop-color="#7c3aed"/>
-                  <stop offset="25%"  stop-color="#2563eb"/>
-                  <stop offset="50%"  stop-color="#06b6d4"/>
-                  <stop offset="75%"  stop-color="#10b981"/>
-                  <stop offset="100%" stop-color="#7c3aed"/>
-                </linearGradient>
-
-                <!-- Marble vein texture (more visible on white) -->
-                <filter id="mf" x="-5%" y="-5%" width="110%" height="110%">
-                  <feTurbulence type="fractalNoise" baseFrequency="0.012 0.018" numOctaves="7" seed="42" result="noise"/>
-                  <feColorMatrix type="saturate" values="0" in="noise" result="gs"/>
-                  <feComponentTransfer in="gs" result="subtle">
-                    <feFuncA type="linear" slope="0.16"/>
-                  </feComponentTransfer>
-                  <feBlend in="SourceGraphic" in2="subtle" mode="multiply" result="veined"/>
-                  <feComposite in="veined" in2="SourceGraphic" operator="in"/>
-                </filter>
-
-                <!-- Soft glow filter -->
-                <filter id="gf" x="-60%" y="-60%" width="220%" height="220%">
-                  <feGaussianBlur stdDeviation="24"/>
-                </filter>
-              </defs>
-
-              <!-- Purple aura behind statue -->
-              <ellipse cx="180" cy="255" rx="100" ry="138" fill="#8B5CF6" opacity="0.24" filter="url(#gf)"/>
-
-              <!-- ── BODY (static) ── -->
-              <g id="david-body">
-                <!-- Gap cover behind neck base -->
-                <ellipse cx="180" cy="216" rx="32" ry="12" fill="url(#mb)"/>
-                <!-- Body marble base -->
-                <path d="M 158,218 L 202,218 C 224,229 256,244 280,263 C 304,279 320,302 320,328 L 318,398 L 290,408 L 260,422 L 260,455 L 292,455 L 292,472 L 68,472 L 68,455 L 100,455 L 100,422 L 70,408 L 42,398 L 40,328 C 40,302 56,279 80,263 C 104,244 136,229 158,218 Z" fill="url(#mb)" filter="url(#mf)"/>
-                <!-- Body light overlay -->
-                <path d="M 158,218 L 202,218 C 224,229 256,244 280,263 C 304,279 320,302 320,328 L 318,398 L 290,408 L 260,422 L 260,455 L 292,455 L 292,472 L 68,472 L 68,455 L 100,455 L 100,422 L 70,408 L 42,398 L 40,328 C 40,302 56,279 80,263 C 104,244 136,229 158,218 Z" fill="url(#dl)" opacity="0.85"/>
-                <!-- Body contour -->
-                <path d="M 158,218 L 202,218 C 224,229 256,244 280,263 C 304,279 320,302 320,328 L 318,398 L 290,408 L 260,422 L 260,455 L 292,455 L 292,472 L 68,472 L 68,455 L 100,455 L 100,422 L 70,408 L 42,398 L 40,328 C 40,302 56,279 80,263 C 104,244 136,229 158,218 Z" fill="none" stroke="rgba(255,255,255,0.14)" stroke-width="0.8"/>
-                <!-- Shoulder highlights -->
-                <path d="M 80,268 C 102,262 132,258 162,256" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-                <path d="M 280,268 C 258,262 228,258 198,256" stroke="rgba(255,255,255,0.08)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-                <!-- Pedestal lines -->
-                <line x1="100" y1="422" x2="260" y2="422" stroke="rgba(0,0,0,0.08)" stroke-width="1"/>
-                <line x1="68"  y1="455" x2="292" y2="455" stroke="rgba(0,0,0,0.1)"  stroke-width="1.5"/>
-              </g>
-
-              <!-- ── HEAD (mouse-tracked, pivots at neck base y=218) ── -->
-              <g id="david-head">
-                <!-- Head+neck marble base -->
-                <path d="M 180,28 C 218,28 252,56 252,96 C 252,132 240,158 226,173 C 218,182 206,188 198,193 L 202,218 L 158,218 L 162,193 C 154,188 142,182 134,173 C 120,158 108,132 108,96 C 108,56 142,28 180,28 Z" fill="url(#mb)" filter="url(#mf)"/>
-                <!-- Head light overlay -->
-                <path d="M 180,28 C 218,28 252,56 252,96 C 252,132 240,158 226,173 C 218,182 206,188 198,193 L 202,218 L 158,218 L 162,193 C 154,188 142,182 134,173 C 120,158 108,132 108,96 C 108,56 142,28 180,28 Z" fill="url(#dl)" opacity="0.88"/>
-                <!-- Holographic animated edge on head -->
-                <path class="d-holo-edge" d="M 180,28 C 218,28 252,56 252,96 C 252,132 240,158 226,173 C 218,182 206,188 198,193 L 202,218 L 158,218 L 162,193 C 154,188 142,182 134,173 C 120,158 108,132 108,96 C 108,56 142,28 180,28 Z" fill="none" stroke="url(#hg)" stroke-width="1.5" opacity="0.7"/>
-                <!-- White inner rim -->
-                <path d="M 180,28 C 218,28 252,56 252,96 C 252,132 240,158 226,173 C 218,182 206,188 198,193 L 202,218 L 158,218 L 162,193 C 154,188 142,182 134,173 C 120,158 108,132 108,96 C 108,56 142,28 180,28 Z" fill="none" stroke="rgba(255,255,255,0.18)" stroke-width="0.6"/>
-
-                <!-- Hair at crown -->
-                <ellipse cx="180" cy="44" rx="50" ry="20" fill="rgba(0,0,0,0.065)"/>
-                <path d="M 134,54 C 148,40 164,32 180,30 C 196,32 212,40 226,54" stroke="rgba(0,0,0,0.05)" stroke-width="0.8" fill="none"/>
-
-                <!-- Forehead highlight -->
-                <ellipse cx="172" cy="62" rx="24" ry="16" fill="rgba(255,255,255,0.1)" transform="rotate(-8 172 62)"/>
-
-                <!-- Brow ridges -->
-                <ellipse cx="158" cy="87" rx="13" ry="4"   fill="rgba(0,0,0,0.07)" transform="rotate(-5 158 87)"/>
-                <ellipse cx="202" cy="87" rx="13" ry="4"   fill="rgba(0,0,0,0.07)" transform="rotate(5 202 87)"/>
-
-                <!-- Eye sockets -->
-                <ellipse cx="158" cy="96" rx="11" ry="7"   fill="rgba(0,0,0,0.06)"/>
-                <ellipse cx="202" cy="96" rx="11" ry="7"   fill="rgba(0,0,0,0.06)"/>
-
-                <!-- Nose bridge -->
-                <path d="M 176,103 L 180,128 L 184,103" stroke="rgba(0,0,0,0.08)" stroke-width="1.5" fill="none" stroke-linecap="round" stroke-linejoin="round"/>
-                <ellipse cx="174" cy="130" rx="5" ry="3"   fill="rgba(0,0,0,0.055)" transform="rotate(-10 174 130)"/>
-                <ellipse cx="186" cy="130" rx="5" ry="3"   fill="rgba(0,0,0,0.055)" transform="rotate(10 186 130)"/>
-
-                <!-- Lip line -->
-                <path d="M 165,145 C 170,150 176,152 180,152 C 184,152 190,150 195,145" stroke="rgba(0,0,0,0.07)" stroke-width="1.5" fill="none" stroke-linecap="round"/>
-
-                <!-- Chin shadow -->
-                <ellipse cx="180" cy="165" rx="20" ry="8"  fill="rgba(0,0,0,0.05)"/>
-
-                <!-- Cheekbone highlights -->
-                <ellipse cx="152" cy="120" rx="12" ry="9"  fill="rgba(255,255,255,0.07)" transform="rotate(-12 152 120)"/>
-                <ellipse cx="208" cy="120" rx="12" ry="9"  fill="rgba(255,255,255,0.07)" transform="rotate(12 208 120)"/>
-
-                <!-- Neck shadow sides -->
-                <path d="M 158,178 C 156,185 155,191 156,197" stroke="rgba(0,0,0,0.08)" stroke-width="2" fill="none" stroke-linecap="round"/>
-                <path d="M 202,178 C 204,185 205,191 204,197" stroke="rgba(0,0,0,0.08)" stroke-width="2" fill="none" stroke-linecap="round"/>
-
-                <!-- Collar drape -->
-                <path d="M 152,194 C 162,189 172,187 180,187 C 188,187 198,189 208,194" stroke="rgba(0,0,0,0.09)" stroke-width="1" fill="none" stroke-linecap="round"/>
-              </g>
-            </svg>
-          </div>
-
-          <div class="d-particles" id="d-particles"></div>
-          <div class="d-fade-bottom"></div>
-
-          <div class="d-ui-bottom">
-            <span class="d-mono-sm d-tag">Tiny Startup Studio</span>
-            <span class="d-mono-sm d-tag">London · 2026</span>
+            <div class="artifact-footer">
+              <span class="a-domain">tinystartupstudio.com</span>
+              <span class="a-day">London, UK</span>
+            </div>
           </div>
         </div>
       </div>
@@ -1858,104 +1799,44 @@
     })();
   })();
 
-  // ── DIGITAL DAVID ────────────────────────────────────────────────────────
+  // ── ARTIFACT CARD TILT ───────────────────────────────────────────────────
   (function () {
-    const scene  = document.getElementById('david-scene');
-    const svg    = document.getElementById('david-svg');
-    const head   = document.getElementById('david-head');
-    const pCont  = document.getElementById('d-particles');
-    if (!scene || !head) return;
+    const card  = document.getElementById('artifact-card');
+    const shine = document.getElementById('artifact-shine');
+    if (!card || !window.matchMedia('(pointer:fine)').matches) return;
 
-    // ── Spawn floating tech glyphs ──────────────────────────────────────────
-    const glyphs = [
-      { t: '{}',  holo: false }, { t: '</>', holo: true  },
-      { t: 'λ',   holo: false }, { t: '∑',   holo: true  },
-      { t: '∞',   holo: false }, { t: '⌘',   holo: false },
-      { t: '◈',   holo: true  }, { t: '⬡',   holo: false },
-      { t: '//',  holo: false }, { t: '01',  holo: true  },
-      { t: '→',   holo: false }, { t: '∂',   holo: false },
-      { t: '≡',   holo: true  }, { t: '⌥',   holo: false },
-    ];
-    glyphs.forEach((g) => {
-      const el = document.createElement('span');
-      el.className = 'd-particle' + (g.holo ? ' holo' : '');
-      el.textContent = g.t;
-      const onLeft = Math.random() < 0.5;
-      const x   = onLeft ? (3 + Math.random() * 14) : (83 + Math.random() * 14);
-      const y   = 10 + Math.random() * 72;
-      const dur = (7 + Math.random() * 7).toFixed(1);
-      const del = (-Math.random() * 10).toFixed(2);
-      const lo  = (0.06 + Math.random() * 0.10).toFixed(2);
-      const hi  = (0.18 + Math.random() * 0.18).toFixed(2);
-      el.style.cssText = `left:${x.toFixed(1)}%;top:${y.toFixed(1)}%;--dur:${dur}s;--delay:${del}s;--lo:${lo};--hi:${hi}`;
-      pCont.appendChild(el);
+    const wrap = card.parentElement;
+    let animFrame;
+    let targetRX = 0, targetRY = 0, currentRX = 0, currentRY = 0;
+    let isHovered = false;
+
+    wrap.addEventListener('mouseenter', () => { isHovered = true; });
+    wrap.addEventListener('mouseleave', () => {
+      isHovered = false;
+      targetRX = 0; targetRY = 0;
+      shine.style.background = 'radial-gradient(circle at 50% 30%, rgba(255,255,255,0.055) 0%, transparent 65%)';
     });
 
-    if (!window.matchMedia('(pointer:fine)').matches) return;
-
-    // ── Head look-at: tracks cursor globally (follows you anywhere on page) ─
-    const dlGrad = svg ? svg.querySelector('#dl') : null;
-
-    // Head rotation targets (set by mouse or idle sway)
-    let tRX = 0, tRY = 0;           // target rotation X (nod) / Y (turn)
-    let cRX = 0, cRY = 0;           // current lerped values
-    let tMX = 0.36, tMY = 0.25;    // target light pos (normalised scene space)
-    let cMX = 0.36, cMY = 0.25;
-    let mouseMoved = false;
-    const startT = performance.now();
-
-    document.addEventListener('mousemove', (e) => {
-      mouseMoved = true;
-      const rect = scene.getBoundingClientRect();
-
-      // Head center in page coords (upper-quarter of scene)
-      const hcx = rect.left + rect.width  * 0.5;
-      const hcy = rect.top  + rect.height * 0.30;
-
-      const dx = e.clientX - hcx;
-      const dy = e.clientY - hcy;
-      const dist = Math.sqrt(dx * dx + dy * dy);
-      const maxDist = 700; // tracking radius in px
-      const inf = Math.max(0, 1 - dist / maxDist); // falls to 0 beyond radius
-
-      // Head turn: +Y = look right, +X = look down
-      tRY = Math.max(-14, Math.min(14, (dx / 14) * inf));
-      tRX = Math.max(-7,  Math.min(7,  (-dy / 28) * inf));
-
-      // Light gradient: clamp to 0-1 inside scene
-      tMX = Math.max(0, Math.min(1, (e.clientX - rect.left) / rect.width));
-      tMY = Math.max(0, Math.min(1, (e.clientY - rect.top)  / rect.height));
+    wrap.addEventListener('mousemove', (e) => {
+      const rect = card.getBoundingClientRect();
+      const x = (e.clientX - rect.left) / rect.width;
+      const y = (e.clientY - rect.top)  / rect.height;
+      targetRX = (y - 0.5) * -18;
+      targetRY = (x - 0.5) *  22;
+      shine.style.background = `radial-gradient(circle at ${x*100}% ${y*100}%, rgba(255,255,255,0.09) 0%, transparent 60%)`;
     });
 
-    function tick(now) {
-      const t = (now - startT) / 1000;
-
-      // When no mouse activity, gentle idle sway
-      if (!mouseMoved) {
-        tRY = Math.sin(t * 0.38) * 5;
-        tRX = Math.sin(t * 0.29 + 0.9) * 2.5;
-        tMX = 0.36 + Math.sin(t * 0.38) * 0.1;
-        tMY = 0.25 + Math.sin(t * 0.29 + 0.9) * 0.06;
+    function tick() {
+      currentRX += (targetRX - currentRX) * 0.1;
+      currentRY += (targetRY - currentRY) * 0.1;
+      if (isHovered || Math.abs(currentRX) > 0.05 || Math.abs(currentRY) > 0.05) {
+        card.style.transform = `rotateX(${currentRX}deg) rotateY(${currentRY}deg)`;
+      } else {
+        card.style.transform = '';
       }
-
-      // Lerp everything
-      cRX += (tRX - cRX) * 0.07;
-      cRY += (tRY - cRY) * 0.07;
-      cMX += (tMX - cMX) * 0.05;
-      cMY += (tMY - cMY) * 0.05;
-
-      // Apply head rotation (pivots at neck base via transform-origin: 50% 100%)
-      head.style.transform = `perspective(700px) rotateX(${cRX.toFixed(3)}deg) rotateY(${cRY.toFixed(3)}deg)`;
-
-      // Update directional light in SVG coordinate space
-      if (dlGrad) {
-        dlGrad.setAttribute('cx', (cMX * 360).toFixed(1));
-        dlGrad.setAttribute('cy', (cMY * 490).toFixed(1));
-      }
-
-      requestAnimationFrame(tick);
+      animFrame = requestAnimationFrame(tick);
     }
-    requestAnimationFrame(tick);
+    tick();
   })();
 
   // ── SCROLL REVEALS ────────────────────────────────────────────────────────
