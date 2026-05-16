@@ -595,10 +595,10 @@
       Tiny Startup Studio
     </a>
     <div class="nav-links">
-      <a href="/#work">Work</a>
+      <a href="/studio#work">Work</a>
       <a href="#process">Process</a>
       <a href="#pricing">Pricing</a>
-      <a href="#faq">FAQ</a>
+      <a href="/studio#faq">FAQ</a>
     </div>
     <div class="nav-right">
       <a class="cta-pro" href="#book">Book a call →</a>
@@ -607,13 +607,6 @@
 
   <!-- ── HERO ── -->
   <section class="hero">
-    <div class="hero-eyebrow mono">
-      <span>tinystartupstudio.com/mvp</span>
-      <span class="live-pill">
-        <span class="live-dot"></span> 2 slots · May
-      </span>
-    </div>
-
     <h1>
       Ship your<br />
       <span class="gradient-text">MVP in 7 days.</span><br />
@@ -623,13 +616,6 @@
     <p class="sub">
       <b>Full-stack.</b> Design, build, and launch a working product in one week. Idea on Monday, live URL by Sunday. Stuff that actually ships.
     </p>
-
-    <div style="display:flex; justify-content:center; margin-top:22px;">
-      <span class="hero-weekly-badge">
-        <span class="hero-weekly-dot"></span>
-        Operators only · Idea to launch in 7 days
-      </span>
-    </div>
 
     <div class="hero-actions">
       <a href="#book" class="hero-cta">
@@ -646,9 +632,6 @@
             <path d="M5 12h14 M12 5l7 7-7 7" />
           </svg>
         </span>
-      </a>
-      <a href="/#work" class="hero-ghost">
-        See past work →
       </a>
     </div>
 
@@ -963,7 +946,7 @@
     <div>© Tiny Startup Studio · Built in 7 days</div>
     <div class="links">
       <a href="/">Home</a>
-      <a href="/#work">Work</a>
+      <a href="/studio#work">Work</a>
       <a href="#pricing">Pricing</a>
       <a href="mailto:hello@tinystartupstudio.com">Email</a>
     </div>
@@ -980,6 +963,117 @@
       });
     }, { rootMargin: '0px 0px -10% 0px', threshold: 0.05 });
     document.querySelectorAll('[data-reveal]').forEach(el => obs.observe(el));
+
+    /* ── Sparkly cursor: emoji bursts with glow ── */
+    (function () {
+      // Skip on touch / reduced-motion / coarse pointers
+      if (matchMedia('(hover: none)').matches) return;
+      if (matchMedia('(prefers-reduced-motion: reduce)').matches) return;
+
+      const EMOJIS  = ['🦄', '🚀', '🔥', '📈', '✨', '⭐', '💫', '⚡', '🌟'];
+      const RARE    = ['🦄', '🚀']; // weighted slightly higher
+      const GLOWS = [
+        'drop-shadow(0 0 10px rgba(179,157,255,0.85)) drop-shadow(0 0 22px rgba(122,208,255,0.55))',
+        'drop-shadow(0 0 10px rgba(255,143,200,0.85)) drop-shadow(0 0 22px rgba(255,184,107,0.55))',
+        'drop-shadow(0 0 10px rgba(121,240,198,0.85)) drop-shadow(0 0 22px rgba(122,208,255,0.55))',
+        'drop-shadow(0 0 10px rgba(255,184,107,0.85)) drop-shadow(0 0 22px rgba(255,143,200,0.55))',
+      ];
+
+      const layer = document.createElement('div');
+      layer.setAttribute('aria-hidden', 'true');
+      Object.assign(layer.style, {
+        position: 'fixed', inset: '0',
+        pointerEvents: 'none', zIndex: '9999',
+        overflow: 'hidden',
+      });
+      document.body.appendChild(layer);
+
+      let lastX = 0, lastY = 0, accum = 0, lastT = 0;
+      const MIN_DIST = 26;        // px between spawns at normal speed
+      const BURST_THRESHOLD = 90; // px in 80ms = "burst"
+
+      function pickEmoji() {
+        // 25% chance of a rare one (unicorn/rocket)
+        if (Math.random() < 0.25) return RARE[Math.floor(Math.random() * RARE.length)];
+        return EMOJIS[Math.floor(Math.random() * EMOJIS.length)];
+      }
+
+      function spawn(x, y, opts = {}) {
+        const s = document.createElement('span');
+        s.textContent = opts.emoji || pickEmoji();
+        const size  = 16 + Math.random() * 14;
+        const driftX = (Math.random() - 0.5) * 110;
+        const driftY = -30 - Math.random() * 80;
+        const rot   = (Math.random() - 0.5) * 120;
+        const dur   = 900 + Math.random() * 500;
+        const scale = 1.2 + Math.random() * 0.6;
+        const glow  = GLOWS[Math.floor(Math.random() * GLOWS.length)];
+
+        Object.assign(s.style, {
+          position: 'absolute',
+          left: x + 'px', top: y + 'px',
+          fontSize: size + 'px',
+          lineHeight: '1',
+          transform: 'translate(-50%, -50%) scale(0.5) rotate(0deg)',
+          filter: glow,
+          opacity: '0',
+          willChange: 'transform, opacity',
+          transition: `transform ${dur}ms cubic-bezier(0.2, 0.6, 0.2, 1), opacity ${dur}ms ease-out`,
+          userSelect: 'none',
+        });
+        layer.appendChild(s);
+
+        // Two-step animate: fade in / scale up briefly, then drift + fade out
+        requestAnimationFrame(() => {
+          s.style.opacity = '1';
+          s.style.transform = `translate(calc(-50% + ${driftX}px), calc(-50% + ${driftY}px)) scale(${scale}) rotate(${rot}deg)`;
+          requestAnimationFrame(() => {
+            // start fade after a beat so the glow registers
+            setTimeout(() => { s.style.opacity = '0'; }, dur * 0.35);
+          });
+        });
+
+        setTimeout(() => s.remove(), dur + 80);
+      }
+
+      function burst(x, y, count) {
+        for (let i = 0; i < count; i++) {
+          const ox = (Math.random() - 0.5) * 20;
+          const oy = (Math.random() - 0.5) * 20;
+          setTimeout(() => spawn(x + ox, y + oy), i * 18);
+        }
+      }
+
+      window.addEventListener('mousemove', (e) => {
+        const dx = e.clientX - lastX;
+        const dy = e.clientY - lastY;
+        const dist = Math.hypot(dx, dy);
+        const now = performance.now();
+        const dt = now - lastT;
+
+        accum += dist;
+        lastX = e.clientX; lastY = e.clientY;
+
+        // Fast flick triggers a small burst
+        if (dt < 80 && dist > BURST_THRESHOLD && Math.random() < 0.5) {
+          burst(e.clientX, e.clientY, 3);
+          accum = 0;
+          lastT = now;
+          return;
+        }
+
+        if (accum >= MIN_DIST) {
+          accum = 0;
+          spawn(e.clientX, e.clientY);
+        }
+        lastT = now;
+      }, { passive: true });
+
+      // Bigger burst on clicks
+      window.addEventListener('click', (e) => {
+        burst(e.clientX, e.clientY, 6);
+      }, { passive: true });
+    })();
   </script>
 
 </body>
